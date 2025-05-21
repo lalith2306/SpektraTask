@@ -1,0 +1,91 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "principalId": {
+      "type": "string",
+      "metadata": {
+        "description": "Object ID of the user/service principal to assign the custom role and policy."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleDefinitions",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceGroup().id, 'custom-role-dns-vm-nsg')]",
+      "properties": {
+        "roleName": "Custom VM DNS NSG Role",
+        "description": "Can start/stop VMs, update DNS settings of VNets, and configure NSGs.",
+        "permissions": [
+          {
+            "actions": [
+              "Microsoft.Compute/virtualMachines/start/action",
+              "Microsoft.Compute/virtualMachines/powerOff/action",
+              "Microsoft.Network/virtualNetworks/write",
+              "Microsoft.Network/networkSecurityGroups/write"
+            ],
+            "notActions": []
+          }
+        ],
+        "assignableScopes": [
+          "[resourceGroup().id]"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyDefinitions",
+      "apiVersion": "2021-06-01",
+      "name": "Restrict-VNet-Write-To-DNSOnly",
+      "properties": {
+        "policyType": "Custom",
+        "mode": "All",
+        "displayName": "Allow only DNS updates on Virtual Network",
+        "description": "Restrict user to update only the DNS settings (dhcpOptions.dnsServers) in a Virtual Network.",
+        "policyRule": {
+          "if": {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/virtualNetworks"
+              },
+              {
+                "not": {
+                  "field": "Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers",
+                  "exists": "true"
+                }
+              }
+            ]
+          },
+          "then": {
+            "effect": "deny"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "Restrict-VNet-Write-To-DNSOnly-Assignment",
+      "properties": {
+        "displayName": "Restrict VNet DNS Write Access",
+        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'Restrict-VNet-Write-To-DNSOnly')]",
+        "scope": "[resourceGroup().id]",
+        "identity": {
+          "type": "UserAssigned"
+        },
+        "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(parameters('principalId'), 'roleAssignment')]",
+      "properties": {
+        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', guid(resourceGroup().id, 'custom-role-dns-vm-nsg'))]",
+        "principalId": "[parameters('principalId')]",
+        "scope": "[resourceGroup().id]"
+      }
+    }
+  ]
+}
