@@ -1,35 +1,33 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {
-    "principalId": {
-      "type": "string",
-      "metadata": {
-        "description": "The principal ID of the user or service principal to assign the policy."
-      }
-    }
-  },
   "resources": [
     {
       "type": "Microsoft.Authorization/policyDefinitions",
       "apiVersion": "2021-06-01",
-      "name": "AllowOnlyVnetDnsUpdatesPolicy",
+      "name": "custom-policy",
       "properties": {
-        "displayName": "Allow only DNS updates on VNets",
-        "mode": "All",
-        "description": "Deny all VNet updates except DNS settings.",
+        "displayName": "custom-policy",
+        "policyType": "Custom",
+        "mode": "Indexed",
+        "description": "Custom policy description",
+        "metadata": {
+          "version": "1.0.0",
+          "category": "General"
+        },
         "policyRule": {
           "if": {
             "allOf": [
               {
-                "field": "type",
-                "equals": "Microsoft.Network/virtualNetworks"
+                "field": "location",
+                "notIn": [
+                  "centralus",
+                  "eastus"
+                ]
               },
               {
-                "not": {
-                  "field": "Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers",
-                  "exists": true
-                }
+                "field": "type",
+                "equals": "Microsoft.Compute/virtualMachines"
               }
             ]
           },
@@ -42,15 +40,17 @@
     {
       "type": "Microsoft.Authorization/policyAssignments",
       "apiVersion": "2021-06-01",
-      "name": "OnlyVnetDnsUpdateAssignment",
-      "properties": {
-        "displayName": "Only DNS updates allowed on VNets",
-        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'AllowOnlyVnetDnsUpdatesPolicy')]",
-        "scope": "[subscription().id]"
-      },
+      "name": "custom-policy-assignment",
       "dependsOn": [
-        "AllowOnlyVnetDnsUpdatesPolicy"
-      ]
+        "[resourceId('Microsoft.Authorization/policyDefinitions', 'custom-policy')]"
+      ],
+      "properties": {
+        "description": "Enforce VM location policy",
+        "displayName": "custom-policy-assignment",
+        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'custom-policy')]",
+        "scope": "[subscription().id]",
+        "enforcementMode": "Default"
+      }
     }
   ]
 }
