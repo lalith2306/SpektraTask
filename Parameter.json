@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vm1Name": {
+      "value": "vm1"
+    },
+    "vm2Name": {
+      "value": "vm2"
+    },
+    "subnet1Prefix": {
+      "value": "10.0.1.0/24"
+    },
+    "subnet2Prefix": {
+      "value": "10.0.2.0/24"
+    },
+    "roleAssignmentPrincipalId": {
+      "value": "2e6ccd31-cc8c-4d62-ac7d-c79bf5979bb0"
+    }
+  }
+}
