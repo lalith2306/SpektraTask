@@ -34,27 +34,43 @@ Develope a ARM template to deploy a Network Infrastructure with RBAC
 - In the search bar, type "Deploy a custom template" and select:
 - Deploy a custom template
 
+<img src="https://github.com/lalith2306/SpektraTask/blob/main/images/1.png?raw=true" width="950" alt=""/>
 
 ### Step 2: Use the Main Template
 - Click on "Build your own template in the editor".
 - In the template editor:
+
+<img src="https://github.com/lalith2306/SpektraTask/blob/main/images/2.png?raw=true" width="950" alt=""/>
+
 - Open your mainTemplate.json file from this link https://raw.githubusercontent.com/lalith2306/SpektraTask/main/Main_Template_working.json.
 - Copy the entire content.
 - Paste it into the editor.
 - Click "**Save**".
+
+  <img src="https://github.com/lalith2306/SpektraTask/blob/main/images/3.png?raw=true" width="950" alt=""/>
 
 ### Step 3: Configure Deployment
 - Choose your Subscription.
 - Select your existing Resource Group or create a new one.
 - For the parameters click on edit parameters.
 - Click on Load File.
+
+<img src="https://github.com/lalith2306/SpektraTask/blob/main/images/4.png?raw=true" width="950" alt=""/>
+
 - Select the parameter file stored locally and check the values properly.
+
+<img src="https://github.com/lalith2306/SpektraTask/blob/main/images/5.png?raw=true" width="950" alt=""/>
+
 - Click Save.
 - Now you will be able to see the parameter values.
+  
+<img src="https://github.com/lalith2306/SpektraTask/blob/main/images/6.png?raw=true" width="950" alt=""/>
 
 ## Step 4: Validation and Deployment
+- Click Review+Create.
 - Check if the template has passed the validation.
-- Click Create.
-  
+- After validation passes click om create
+<img src="https://github.com/lalith2306/SpektraTask/blob/main/images/6.png?raw=true" width="950" alt=""/>
+Deployement Successful 
 
 
