@@ -20,9 +20,12 @@
         "permissions": [
           {
             "actions": [
+              "Microsoft.Compute/virtualMachines/read",
               "Microsoft.Compute/virtualMachines/start/action",
               "Microsoft.Compute/virtualMachines/powerOff/action",
-              "Microsoft.Network/virtualNetworks/write",
+              "Microsoft.Network/dnsResolvers/write",
+              "Microsoft.Network/dnszones/*",
+              "Microsoft.Network/networkSecurityGroups/read",
               "Microsoft.Network/networkSecurityGroups/write"
             ],
             "notActions": []
