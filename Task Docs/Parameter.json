@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName1": {
+      "value": "vmOne"
+    },
+    "vmName2": {
+      "value": "vmTwo"
+    },
+    "subnet1Prefix": {
+      "value": "10.0.1.0/24"
+    },
+    "subnet2Prefix": {
+      "value": "10.0.2.0/24"
+    },
+    "principalId": {
+      "value": "52387522-e541-4222-95ff-3f9164cb0325"
+    }
+  }
+}

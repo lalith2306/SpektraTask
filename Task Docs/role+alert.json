@@ -1,0 +1,118 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "principalId": {
+            "type": "string",
+            "metadata": {
+                "description": "Object ID of the user/service principal."
+            }
+        }
+    },
+    "variables": {
+        "roleDefinitionGuid": "[guid(resourceGroup().id, 'custom-role-dns-vm-nsg')]",
+        "actionGroupName": "VNetActionGroup",
+        "alertRuleName": "VNetWriteAlert"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/roleDefinitions",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[variables('roleDefinitionGuid')]",
+            "properties": {
+                "roleName": "Custom VM DNS NSG Role",
+                "description": "Can start/stop VMs, update DNS settings of VNets, and configure NSGs.",
+                "permissions": [
+                    {
+                        "actions": [
+                            "Microsoft.Compute/virtualMachines/read",
+                            "Microsoft.Compute/virtualMachines/start/action",
+                            "Microsoft.Compute/virtualMachines/powerOff/action",
+                            "Microsoft.Network/virtualNetworks/read",
+                            "Microsoft.Network/virtualNetworks/write",    
+                            "Microsoft.Network/networkSecurityGroups/read",
+                            "Microsoft.Network/networkSecurityGroups/write"
+                        ],
+                        "notActions": []
+                    }
+                ],
+                "assignableScopes": [
+                    "[resourceGroup().id]"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[guid(parameters('principalId'), 'roleAssignment')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleDefinitions', variables('roleDefinitionGuid'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('roleDefinitionGuid'))]",
+                "principalId": "[parameters('principalId')]",
+                "scope": "[resourceGroup().id]"
+            }
+        },
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2021-09-01",
+            "name": "[variables('actionGroupName')]",
+            "location": "global",
+            "properties": {
+                "groupShortName": "VNetAlerts",
+                "enabled": true,
+                "emailReceivers": [
+                    {
+                        "name": "Lalith",
+                        "emailAddress": "Lalith.kumar05@outlook.com",
+                        "useCommonAlertSchema": true
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Insights/activityLogAlerts",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('alertRuleName')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/actionGroups', variables('actionGroupName'))]"
+            ],
+            "properties": {
+                "scopes": [
+                    "[resourceGroup().id]"
+                ],
+                "enabled": true,
+                "condition": {
+                    "allOf": [
+                        {
+                            "field": "category",
+                            "equals": "Administrative"
+                        },
+                        {
+                            "field": "operationName",
+                            "equals": "Microsoft.Network/virtualNetworks/write"
+                        },
+                        {
+                            "field": "caller",
+                            "equals": "[parameters('principalId')]"
+                        },
+                        {
+                            "field": "resourceType",
+                            "equals": "Microsoft.Network/virtualNetworks"
+                        }
+                    ]
+                },
+                "actions": {
+                    "actionGroups": [
+                        {
+                            "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', variables('actionGroupName'))]"
+                        }
+                    ]
+                },
+                "description": "Alerts when the specified user makes VNet changes, potentially non-DNS."
+            }
+        }
+    ]
+}
