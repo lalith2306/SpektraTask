@@ -31,7 +31,9 @@
                             "Microsoft.Network/virtualNetworks/read",
                             "Microsoft.Network/virtualNetworks/write",    
                             "Microsoft.Network/networkSecurityGroups/read",
-                            "Microsoft.Network/networkSecurityGroups/write"
+                            "Microsoft.Network/networkSecurityGroups/write",
+                            "Microsoft.Network/networkSecurityGroups/securityRules/read",
+                            "Microsoft.Network/networkSecurityGroups/securityRules/write"
                         ],
                         "notActions": []
                     }
