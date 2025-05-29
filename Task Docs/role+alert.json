@@ -111,7 +111,7 @@
                         }
                     ]
                 },
-                "description": "Alerts when the specified user makes VNet changes, potentially non-DNS."
+                "description": "Alerts when the specified user makes VNet changes"
             }
         }
     ]
