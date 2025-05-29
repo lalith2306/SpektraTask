@@ -25,8 +25,6 @@
               "Microsoft.Compute/virtualMachines/deallocate/action",
               "Microsoft.Network/virtualNetworks/read",
               "Microsoft.Network/virtualNetworks/write",
-              "Microsoft.Network/dnsResolvers/write",
-              "Microsoft.Network/dnszones/*",
               "Microsoft.Network/networkSecurityGroups/read",
               "Microsoft.Network/networkSecurityGroups/write"
             ],
