@@ -157,6 +157,10 @@
       "type": "string",
       "value": "[parameters('adminUsername')]"
     },
+    "adminPassword": {
+      "type": "string",
+      "value": "[parameters('adminPassword')]"
+    },
     "dnsName": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('ipName'))).dnsSettings.fqdn]"
