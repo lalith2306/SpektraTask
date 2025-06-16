@@ -12,7 +12,7 @@
             }
         },
         "adminPassword": {
-            "type": "String",
+            "type": "SecureString",
             "metadata": {
                 "description": "Admin password for the VM"
             }
@@ -141,8 +141,8 @@
                         "enableAutomaticUpdates": true,
                         "provisionVMAgent": true
                     }
-                    },
-                    "storageProfile": {
+                },
+                "storageProfile": {
                     "imageReference": {
                         "publisher": "[variables('imagePublisher')]",
                         "offer": "[variables('imageOffer')]",
@@ -170,10 +170,6 @@
         "adminUsername": {
             "type": "String",
             "value": "[parameters('adminUsername')]"
-        },
-      "adminPassword": {
-            "type": "String",
-            "value": "[parameters('adminPassword')]"
         },
         "dnsName": {
             "type": "String",
