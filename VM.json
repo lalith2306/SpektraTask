@@ -167,11 +167,19 @@
         }
     ],
     "outputs": {
-        "adminUsername": {
+        "AdminUsername": {
             "type": "String",
             "value": "[parameters('adminUsername')]"
         },
-        "dnsName": {
+        "VMName": {
+            "type": "String",
+            "value": "[parameters('vmName')]"
+        },
+        "AdminPassword": {
+            "type": "String",
+            "value": "[parameters('adminPassword')]"
+        },
+        "DNSName": {
             "type": "String",
             "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('ipName'))).dnsSettings.fqdn]"
         }
