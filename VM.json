@@ -28,7 +28,7 @@
         "nsgName": "[concat('nsg-', parameters('vmName'), '-', variables('depId'))]",
         "nicName": "[concat('nic-', parameters('vmName'), '-', variables('depId'))]",
         "ipName": "[concat('pip-', parameters('vmName'), '-', variables('depId'))]",
-        "dnsLabelPrefix": "[concat(parameters('vmName'), '-dns-', variables('depId'))]",
+        "dnsLabelPrefix": "[concat(toLower(parameters('vmName')), '-dns-', uniqueString(resourceGroup().id, parameters('vmName')))]",
         "vmSize": "Standard_D2s_v3",
         "imagePublisher": "MicrosoftWindowsServer",
         "imageOffer": "WindowsServer",
