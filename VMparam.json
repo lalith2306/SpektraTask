@@ -5,11 +5,14 @@
         "vmName": {
             "value": "LalithVM"
         },
+        "DeploymentID": {
+			"value": "12345"
+		},
         "adminUsername": {
             "value": "Lalith"
         },
         "adminPassword": {
-            "value": "GEN-PASSWORD"
+            "value": "Lalith123"
         }
     }
 }
