@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vmName": {
-            "value": "LalithVM"
+            "value": "Lalith VM"
         },
         "DeploymentID": {
-			"value": "d12345-abcd"
+			"value": "GET-DEPLOYMENT-ID"
 		},
         "adminUsername": {
             "value": "Lalith"
         },
         "adminPassword": {
-            "value": "AzVm459505Secure12345!"
+            "value": "GEN-PASSWORD"
         }
     }
 }
