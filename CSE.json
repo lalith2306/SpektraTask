@@ -177,20 +177,14 @@
             "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
         ],
         "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.10",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \" \
-                $vsCodeInstaller = Join-Path $env:TEMP 'VSCodeSetup.exe'; \
-                Invoke-WebRequest -Uri 'https://update.code.visualstudio.com/latest/win32-x64-user/stable' -OutFile $vsCodeInstaller; \
-                Start-Process -FilePath $vsCodeInstaller -ArgumentList '/silent','/mergetasks=!runcode' -Wait; \
-                $chromeInstaller = Join-Path $env:TEMP 'ChromeSetup.exe'; \
-                Invoke-WebRequest -Uri 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile $chromeInstaller; \
-                Start-Process -FilePath $chromeInstaller -ArgumentList '/silent','/install' -Wait;\""
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.10",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "commandToExecute": "powershell -ExecutionPolicy Bypass -Command \"try { $ErrorActionPreference = 'Stop'; $temp = $env:TEMP; $vsCodeInstaller = Join-Path -Path $temp -ChildPath 'VSCodeSetup.exe'; Invoke-WebRequest -Uri 'https://update.code.visualstudio.com/latest/win32-x64-user/stable' -OutFile $vsCodeInstaller; Start-Process -FilePath $vsCodeInstaller -ArgumentList '/VERYSILENT', '/MERGETASKS=!runcode' -Wait; $chromeInstaller = Join-Path -Path $temp -ChildPath 'ChromeSetup.exe'; Invoke-WebRequest -Uri 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile $chromeInstaller; Start-Process -FilePath $chromeInstaller -ArgumentList '/silent', '/install' -Wait; Write-Output 'Installation completed successfully.'; } catch { Write-Error $_.Exception.Message; exit 1; }\""
+                }
             }
-        }
         }    
     ],
     "outputs": {
