@@ -1,0 +1,290 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "logicAppName": {
+            "type": "String"
+        },
+        "revokeLogicAppName": {
+            "type": "String"
+        },
+        "blocklistKeywords": {
+            "defaultValue": [
+                "bitcoin",
+                "crypto",
+                "mining"
+            ],
+            "type": "Array"
+        },
+        "resourcePrefix": {
+            "defaultValue": "gpt4o",
+            "type": "String"
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String"
+        },
+        "alertEmailAddress": {
+            "type": "String"
+        },
+        "subscriptionId": {
+            "type": "String"
+        },
+        "workspaceName": {
+            "type": "String"
+        },
+        "roleAssignmentName": {
+            "type": "String"
+        },
+        "tenantId": {
+            "type": "String"
+        },
+        "clientId": {
+            "type": "String"
+        },
+        "clientSecret": {
+            "type": "SecureString"
+        },
+        "principalId": {
+            "type": "String"
+        }
+    },
+    "variables": {
+        "logicAppId": "[resourceId('Microsoft.Logic/workflows', parameters('revokeLogicAppName'))]",
+        "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[parameters('workspaceName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "retentionInDays": 30
+            }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2019-05-01",
+            "name": "[parameters('logicAppName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "triggers": {
+                        "When_AI_Resource_Created": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "resourceUri": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "resourceUri"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Get_Token": {
+                            "type": "Http",
+                            "inputs": {
+                                "method": "POST",
+                                "uri": "@{concat('https://login.microsoftonline.com/', parameters('tenantId'), '/oauth2/v2.0/token')}",
+                                "headers": {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                "body": "@{concat('grant_type=client_credentials&client_id=', parameters('clientId'), '&client_secret=', parameters('clientSecret'), '&scope=https%3A%2F%2Fmanagement.azure.com%2F.default')}"
+                            },
+                            "runAfter": {}
+                        },
+                        "Patch_Blocklist": {
+                            "type": "Http",
+                            "inputs": {
+                                "method": "PUT",
+                                "uri": "@{concat('https://management.azure.com', triggerBody().data.resourceUri, '/raiServices/blocklist?api-version=2023-04-01')}",
+                                "headers": {
+                                    "Content-Type": "application/json",
+                                    "Authorization": "Bearer @{body('Get_Token')?['access_token']}"
+                                },
+                                "body": {
+                                    "properties": {
+                                        "entries": "@parameters('blocklistKeywords')"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Get_Token": [
+                                    "Succeeded"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2019-05-01",
+            "name": "[parameters('revokeLogicAppName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "roleAssignmentName": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "roleAssignmentName"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Get_Token": {
+                            "type": "Http",
+                            "inputs": {
+                                "method": "POST",
+                                "uri": "@{concat('https://login.microsoftonline.com/', parameters('tenantId'), '/oauth2/v2.0/token')}",
+                                "headers": {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                "body": "@{concat('grant_type=client_credentials&client_id=', parameters('clientId'), '&client_secret=', parameters('clientSecret'), '&scope=https%3A%2F%2Fmanagement.azure.com%2F.default')}"
+                            },
+                            "runAfter": {}
+                        },
+                        "Revoke_Role_Assignment": {
+                            "type": "Http",
+                            "inputs": {
+                                "method": "DELETE",
+                                "uri": "@{concat('https://management.azure.com/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/roleAssignments/', triggerBody().roleAssignmentName, '?api-version=2022-04-01')}",
+                                "headers": {
+                                    "Content-Type": "application/json",
+                                    "Authorization": "Bearer @{body('Get_Token')?['access_token']}"
+                                }
+                            },
+                            "runAfter": {
+                                "Get_Token": [
+                                    "Succeeded"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.EventGrid/eventSubscriptions",
+            "apiVersion": "2022-06-15",
+            "name": "[concat(parameters('logicAppName'), '-subscription')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Logic/workflows', parameters('logicAppName'))]"
+            ],
+            "properties": {
+                "scope": "[subscription().id]",
+                "destination": {
+                    "endpointType": "WebHook",
+                    "properties": {
+                        "endpointUrl": "[listCallbackUrl(resourceId('Microsoft.Logic/workflows/triggers', parameters('logicAppName'), 'When_AI_Resource_Created'), '2016-06-01').value]"
+                    }
+                },
+                "filter": {
+                    "includedEventTypes": [
+                        "Microsoft.Resources.ResourceWriteSuccess"
+                    ],
+                    "subjectBeginsWith": "[concat('/subscriptions/', parameters('subscriptionId'))]",
+                    "subjectEndsWith": "/Microsoft.CognitiveServices/accounts"
+                },
+                "eventDeliverySchema": "EventGridSchema"
+            }
+        },
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('resourcePrefix'), '-actiongroup')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Logic/workflows', parameters('revokeLogicAppName'))]"
+            ],
+            "properties": {
+                "groupShortName": "gpt4oact",
+                "enabled": true,
+                "emailReceivers": [
+                    {
+                        "name": "AdminNotify",
+                        "emailAddress": "[parameters('alertEmailAddress')]"
+                    }
+                ],
+                "logicAppReceivers": [
+                    {
+                        "name": "RevokeRoleLogicApp",
+                        "resourceId": "[variables('logicAppId')]",
+                        "callbackUrl": "[listCallbackUrl(resourceId('Microsoft.Logic/workflows/triggers', parameters('revokeLogicAppName'), 'manual'), '2016-06-01').value]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2021-08-01",
+            "name": "[concat(parameters('resourcePrefix'), '-tokenlimit-rule')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+                "[resourceId('Microsoft.Insights/actionGroups', concat(parameters('resourcePrefix'), '-actiongroup'))]"
+            ],
+            "properties": {
+                "description": "Test Heartbeat Alert",
+                "enabled": true,
+                "scopes": [
+                    "[variables('workspaceId')]"
+                ],
+                "evaluationFrequency": "PT5M",
+                "windowSize": "PT1H",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "query": "Heartbeat | summarize Count = count() by bin(TimeGenerated, 1h)",
+                            "threshold": 1,
+                            "operator": "GreaterThanOrEqual",
+                            "dataSourceId": "[variables('workspaceId')]",
+                            "timeAggregation": "Count"
+                        }
+                    ]
+                },
+                "severity": 2,
+                "actions": {
+                    "actionGroups": [
+                        "[resourceId('Microsoft.Insights/actionGroups', concat(parameters('resourcePrefix'), '-actiongroup'))]"
+                    ]
+                }
+            }
+        }
+    ]
+}
