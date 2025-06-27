@@ -1,0 +1,98 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "principalId": {
+      "type": "string",
+      "metadata": {
+        "description": "Object ID of the user or service principal to assign the role to"
+      }
+    }
+  },
+  "variables": {
+    "roleDefinitionId": "[guid('GPT4oOnlyRole')]",
+    "policyDefinitionId": "[guid('OnlyGPT4oPolicy')]",
+    "roleName": "GPT4o Only Reader",
+    "policyDefinitionName": "only-gpt4o-model",
+    "policyAssignmentName": "enforce-gpt4o-only"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleDefinitions",
+      "apiVersion": "2022-04-01",
+      "name": "[variables('roleDefinitionId')]",
+      "properties": {
+        "roleName": "[variables('roleName')]",
+        "description": "Restrict user to read AI Foundry account and GPT-4o deployment only",
+        "assignableScopes": [
+          "[subscription().id]"
+        ],
+        "permissions": [
+          {
+            "actions": [
+              "Microsoft.Resources/subscriptions/resourceGroups/read",
+              "Microsoft.Resources/subscriptions/resourceGroups/write",
+              "Microsoft.CognitiveServices/accounts/*"
+            ],
+            "notActions": []
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(parameters('principalId'), variables('roleDefinitionId'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Authorization/roleDefinitions', variables('roleDefinitionId'))]"
+      ],
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roleDefinitionId'))]",
+        "principalId": "[parameters('principalId')]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyDefinitions",
+      "apiVersion": "2021-06-01",
+      "name": "[variables('policyDefinitionName')]",
+      "properties": {
+        "displayName": "Only Allow GPT-4o Deployment",
+        "description": "Restricts deployments to GPT-4o only",
+        "policyType": "Custom",
+        "mode": "All",
+        "policyRule": {
+          "if": {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.CognitiveServices/accounts/deployments"
+              },
+              {
+                "not": {
+                  "field": "name",
+                  "equals": "gpt4o-deployment"
+                }
+              }
+            ]
+          },
+          "then": {
+            "effect": "deny"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "[variables('policyAssignmentName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Authorization/policyDefinitions', variables('policyDefinitionName'))]"
+      ],
+      "properties": {
+        "displayName": "Enforce GPT-4o Only",
+        "policyDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions', variables('policyDefinitionName'))]",
+        "scope": "[subscription().id]"
+      }
+    }
+  ]
+}

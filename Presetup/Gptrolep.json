@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "principalId": {
+      "value": "52387522-e541-4222-95ff-3f9164cb0325"
+    },
+    "blocklistTerms": {
+      "value": "bitcoin,bitcoin mining,mining,crypto"
+    }
+  }
+}

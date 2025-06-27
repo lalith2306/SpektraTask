@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "logicAppName": {
+            "value": "gpt4o-blocklist-watcher"
+        },
+        "revokeLogicAppName": {
+            "value": "gpt4o-role-revoker"
+        },
+        "blocklistKeywords": {
+            "value": [
+                "bitcoin",
+                "crypto",
+                "mining"
+            ]
+        },
+        "resourcePrefix": {
+            "value": "gpt4o"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "alertEmailAddress": {
+            "value": "lalithkumar2306@gmail.com"
+        },
+        "subscriptionId": {
+            "value": "cefb50ff-6f4c-4284-ac23-f3dbece0788e"
+        },
+        "workspaceName": {
+            "value": "gpt4o-logs"
+        },
+        "roleAssignmentName": {
+            "value": "GPT4o Only Reader"
+        },
+        "tenantId": {
+            "value": "8dfb4948-f4d3-4687-abd4-a9b4baff6548"
+        },
+        "clientId": {
+            "value": "8b1bf052-d43e-476a-82ca-d74ea698ad92"
+        },
+        "clientSecret": {
+            "value": "6R38Q~5BCKdBlWaFFpFlzztKUimx3V0_L9J5saxJ"
+        },
+        "principalId": {
+            "value": "c99381a9-53c2-40cd-a414-8bfe3f41e9e9"
+        }
+    }
+}
