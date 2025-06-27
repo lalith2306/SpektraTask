@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "variables": {
+    "template1DeploymentName": "Role-Policy",
+    "template2DeploymentName": "Monitor-Alerts-Action"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "[variables('template1DeploymentName')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/Gptrole.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parametersLink": {
+          "uri": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/AI-Foundary-Parameter.json",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "[variables('template2DeploymentName')]",
+      "dependsOn": [
+        "[variables('template1DeploymentName')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/finalworking.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parametersLink": {
+          "uri": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/AI-Foundary-Parameter.json",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "template1Output": {
+      "type": "object",
+      "value": "[reference(variables('template1DeploymentName')).outputs]"
+    },
+    "template2Output": {
+      "type": "object",
+      "value": "[reference(variables('template2DeploymentName')).outputs]"
+    }
+  }
+}
