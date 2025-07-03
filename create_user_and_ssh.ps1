@@ -3,7 +3,6 @@ param (
     [string]$password,
     [string]$editScriptUrl = "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/edit_sshd_config.ps1"
 )
-
 # Initialize logging
 $logFile = "C:\ProgramData\SSHSetupLog.txt"
 function Log-Message {
@@ -11,9 +10,7 @@ function Log-Message {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     "$timestamp - $Message" | Out-File -FilePath $logFile -Append
 }
-
 Log-Message "Starting script execution"
-
 # Install PowerShell 7.4.2
 try {
     Log-Message "Downloading PowerShell 7.4.2"
@@ -30,7 +27,6 @@ try {
     Log-Message "Error installing PowerShell 7: $_"
     exit 1
 }
-
 # Install Azure PowerShell
 try {
     Log-Message "Installing Azure PowerShell"
@@ -40,7 +36,6 @@ try {
     Log-Message "Error installing Azure PowerShell: $_"
     exit 1
 }
-
 # Enable auditing for all subcategories
 try {
     Log-Message "Enabling auditing for all categories"
@@ -50,7 +45,6 @@ try {
     Log-Message "Error enabling auditing: $_"
     exit 1
 }
-
 # Install OpenSSH Server
 try {
     Log-Message "Installing OpenSSH Server"
@@ -65,7 +59,6 @@ try {
     Log-Message "Error installing OpenSSH Server: $_"
     exit 1
 }
-
 # Create the "badactor" user
 try {
     Log-Message "Creating user $username"
@@ -76,7 +69,6 @@ try {
     Log-Message "Error creating user $username: $_"
     exit 1
 }
-
 # Start and configure SSH service
 try {
     Log-Message "Starting sshd service"
@@ -87,7 +79,6 @@ try {
     Log-Message "Error starting sshd service: $_"
     exit 1
 }
-
 # Ensure firewall rule for SSH (port 22)
 try {
     Log-Message "Configuring firewall rule for SSH"
@@ -97,7 +88,6 @@ try {
     Log-Message "Error creating firewall rule: $_"
     exit 1
 }
-
 # Configure SSH to allow password authentication
 $sshdConfigPath = "C:\ProgramData\ssh\sshd_config"
 try {
@@ -116,7 +106,6 @@ try {
     Log-Message "Error configuring sshd_config: $_"
     exit 1
 }
-
 # Set up auditing for sshd_config
 try {
     Log-Message "Setting audit ACL on $sshdConfigPath"
@@ -129,7 +118,6 @@ try {
     Log-Message "Error setting audit ACL: $_"
     exit 1
 }
-
 # Add "# edited by badactor" to sshd_config
 try {
     Log-Message "Adding '# edited by badactor' to $sshdConfigPath"
@@ -145,7 +133,6 @@ try {
     Log-Message "Error editing sshd_config: $_"
     exit 1
 }
-
 # Restart SSH service
 try {
     Log-Message "Restarting sshd service"
@@ -155,7 +142,6 @@ try {
     Log-Message "Error restarting sshd service: $_"
     exit 1
 }
-
 # Download the recurring edit script
 $editScriptPath = "C:\ProgramData\edit_sshd_config.ps1"
 try {
@@ -166,7 +152,6 @@ try {
     Log-Message "Error downloading edit script: $_"
     exit 1
 }
-
 # Create a scheduled task to run the edit script every 3 minutes
 try {
     Log-Message "Creating scheduled task for recurring edits"
@@ -179,5 +164,4 @@ try {
     Log-Message "Error creating scheduled task: $_"
     exit 1
 }
-
 Log-Message "Script execution completed"
