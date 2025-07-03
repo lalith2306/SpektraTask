@@ -22,7 +22,7 @@ Start-Process msiexec.exe -ArgumentList "/i $env:TEMP\pwsh.msi /quiet" -Wait
 # Install OpenSSH Server (per Microsoft documentation for Windows Server 2019)
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 
-# Create the new user "badactor" with same password as azureuser
+# Create the new user "badactor" with same password as admin user
 New-LocalUser -Name $username -Password $securePassword -FullName "Bad Actor" -Description "User for SSH access"
 Add-LocalGroupMember -Group "Administrators" -Member $username
 
