@@ -7,6 +7,21 @@ param (
 # Create a secure string for the password
 $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 
+# Download the PowerShell 7.4.2 MSI installer
+Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.4.2/PowerShell-7.4.2-win-x64.msi" -OutFile "$env:TEMP\pwsh.msi"
+
+# Install it silently
+Start-Process msiexec.exe -ArgumentList "/i $env:TEMP\pwsh.msi /quiet" -Wait
+
+# Confirm it's installed
+& "C:\Program Files\PowerShell\7\pwsh.exe" -Command '$PSVersionTable'
+
+# Enable auditing of all subcategories
+auditpol /set /category:* /success:enable /failure:enable
+
+# Optional: verify applied settings
+auditpol /get /category:*
+
 # Create the new user
 New-LocalUser -Name $username -Password $securePassword -FullName "Bad Actor" -Description "User for SSH access"
 
