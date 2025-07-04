@@ -1,7 +1,6 @@
 param (
     [string]$username = "badactor",
-    [string]$password,
-    [string]$editScriptUrl = "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/edit_sshd_config.ps1"  # Placeholder, will be self-contained
+    [string]$password  # No default; must match adminPassword from ARM template
 )
 
 # Initialize logging
@@ -17,10 +16,10 @@ Log-Message "Starting script execution"
 # Create a secure string for the password
 $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 
-# Create the new user
+# Create the new user with the same password as the admin
 try {
     Log-Message "Creating user $username"
-    New-LocalUser -Name $username -Password $securePassword -FullName "Bad Actor" -Description "User for SSH access"
+    New-LocalUser -Name $username -Password $securePassword -FullName "Bad Actor" -Description "User for SSH access" -PasswordNeverExpires
     Add-LocalGroupMember -Group "Administrators" -Member $username
     Log-Message "User $username created and added to Administrators"
 } catch {
@@ -54,7 +53,7 @@ try {
     exit 1
 }
 
-# Enable auditing for all subcategories
+# Enable auditing for all subcategories (group policy requirement)
 try {
     Log-Message "Enabling auditing for all categories"
     & "C:\Program Files\PowerShell\7\pwsh.exe" -Command "auditpol /set /category:* /success:enable /failure:enable"
@@ -64,20 +63,10 @@ try {
     exit 1
 }
 
-# Install OpenSSH Server
+# Pre-install OpenSSH Server
 try {
     Log-Message "Installing OpenSSH Server"
-    $osVersion = (Get-CimInstance -ClassName Win32_OperatingSystem).Version
-    if ($osVersion -ge "10.0.17763") {
-        Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
-    } else {
-        $openSshUrl = "https://github.com/PowerShell/Win32-OpenSSH/releases/download/v8.1.0.0p1-Beta/OpenSSH-Win64.zip"
-        $zipPath = "$env:TEMP\OpenSSH-Win64.zip"
-        $installPath = "C:\Program Files\OpenSSH"
-        Invoke-WebRequest -Uri $openSshUrl -OutFile $zipPath
-        Expand-Archive -Path $zipPath -DestinationPath $installPath -Force
-        & "$installPath\install-sshd.ps1"
-    }
+    Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
     if (Get-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0 | Where-Object State -eq "Installed") {
         Log-Message "OpenSSH Server installed"
     } else {
@@ -142,7 +131,7 @@ try {
     exit 1
 }
 
-# Add "# edited by badactor" to sshd_config
+# Add "# edited by badactor" to sshd_config (after DCR is in place)
 try {
     Log-Message "Adding '# edited by badactor' to $sshdConfigPath"
     $content = Get-Content -Path $sshdConfigPath -Raw
@@ -168,7 +157,7 @@ try {
     exit 1
 }
 
-# Define the recurring edit function (replacing the need for a separate script)
+# Define the recurring edit function
 function Edit-SshdConfig {
     param ([string]$sshdConfigPath)
     try {
