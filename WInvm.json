@@ -1,0 +1,380 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "String"
+        },
+        "DeploymentID": {
+            "type": "String"
+        },
+        "adminUsername": {
+            "type": "String",
+            "metadata": {
+                "description": "Admin username for the VM"
+            }
+        },
+        "adminPassword": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "Admin password for the VM"
+            }
+        },
+        "scriptUrl": {
+            "defaultValue": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/create_user_and_ssh.ps1",
+            "type": "String",
+            "metadata": {
+                "description": "URL to the consolidated PowerShell script"
+            }
+        },
+        "dcrName": {
+            "defaultValue": "myDCR",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Data Collection Rule resource"
+            }
+        },
+        "workspaceName": {
+            "defaultValue": "logWorkspace",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Log Analytics workspace"
+            }
+        },
+        "location": {
+            "defaultValue": "eastus",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources"
+            }
+        }
+    },
+    "variables": {
+        "depId": "[parameters('DeploymentID')]",
+        "vnetName": "[concat('vnet-', parameters('vmName'), '-', variables('depId'))]",
+        "subnetName": "[concat('subnet-', parameters('vmName'), '-', variables('depId'))]",
+        "nsgName": "[concat('nsg-', parameters('vmName'), '-', variables('depId'))]",
+        "nicName": "[concat('nic-', parameters('vmName'), '-', variables('depId'))]",
+        "ipName": "[concat('pip-', parameters('vmName'), '-', variables('depId'))]",
+        "dnsLabelPrefix": "[concat(toLower(parameters('vmName')), '-dns-', uniqueString(resourceGroup().id, parameters('vmName')))]",
+        "vmSize": "Standard_D2s_v3",
+        "imagePublisher": "MicrosoftWindowsServer",
+        "imageOffer": "WindowsServer",
+        "imageSku": "2019-Datacenter",
+        "imageVersion": "latest",
+        "dcrAssociationName": "dcr-association",
+        "securitySolutionName": "Security"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2022-10-01",
+            "name": "[parameters('workspaceName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "retentionInDays": 30,
+                "features": {
+                    "enableLogAccessUsingOnlyResourcePermissions": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationsManagement/solutions",
+            "apiVersion": "2015-11-01-preview",
+            "name": "[concat('Security(', parameters('workspaceName'), ')')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+            ],
+            "plan": {
+                "name": "[concat('Security(', parameters('workspaceName'), ')')]",
+                "publisher": "Microsoft",
+                "product": "OMSGallery/Security",
+                "promotionCode": ""
+            },
+            "properties": {
+                "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[parameters('vmName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vmName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVMAgent": true
+                    }
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "[variables('imageSku')]",
+                        "version": "[variables('imageVersion')]"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        }
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('vmName'), '/AzureMonitorWindowsAgent')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Azure.Monitor",
+                "type": "AzureMonitorWindowsAgent",
+                "typeHandlerVersion": "1.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "authentication": {
+                        "managedIdentity": {
+                            "identifier-name": "mi-res-id",
+                            "identifier-value": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Insights/dataCollectionRules",
+            "apiVersion": "2021-09-01-preview",
+            "name": "[parameters('dcrName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+                "[resourceId('Microsoft.OperationsManagement/solutions', concat('Security(', parameters('workspaceName'), ')'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'AzureMonitorWindowsAgent')]"
+            ],
+            "properties": {
+                "dataSources": {
+                    "windowsEventLogs": [
+                        {
+                            "name": "securityEvents",
+                            "streams": [
+                                "Microsoft-SecurityEvent"
+                            ],
+                            "xPathQueries": [
+                                "Security!*[System[(EventID=4663)]]"
+                            ]
+                        }
+                    ]
+                },
+                "destinations": {
+                    "logAnalytics": [
+                        {
+                            "name": "logAnalyticsDestination",
+                            "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+                        }
+                    ]
+                },
+                "dataFlows": [
+                    {
+                        "streams": [
+                            "Microsoft-SecurityEvent"
+                        ],
+                        "destinations": [
+                            "logAnalyticsDestination"
+                        ],
+                        "outputStream": "Microsoft-SecurityEvent"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Insights/dataCollectionRuleAssociations",
+            "apiVersion": "2021-09-01-preview",
+            "name": "[variables('dcrAssociationName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
+                "[resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName'))]"
+            ],
+            "properties": {
+                "dataCollectionRuleId": "[resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName'))]",
+                "description": "Associates the DCR with the VM"
+            },
+            "scope": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2023-05-01",
+            "name": "[variables('ipName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower(variables('dnsLabelPrefix'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2023-05-01",
+            "name": "[variables('nsgName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "AllowRDP",
+                        "properties": {
+                            "priority": 1000,
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "*",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "3389"
+                        }
+                    },
+                    {
+                        "name": "AllowSSH",
+                        "properties": {
+                            "priority": 1001,
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "*",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "22"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2023-05-01",
+            "name": "[variables('vnetName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2023-05-01",
+            "name": "[variables('nicName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnetName'))]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ipName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('vmName'), '/CustomScriptExtension')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.10",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[parameters('scriptUrl')"
+                    ],
+                    "commandToExecute": "powershell.exe -ExecutionPolicy Bypass -File create_user_and_ssh.ps1 -username badactor -password %adminPassword%"
+                },
+                "protectedSettings": {
+                    "adminPassword": "[parameters('adminPassword')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "AdminUsername": {
+            "type": "String",
+            "value": "[parameters('adminUsername')]"
+        },
+        "VMName": {
+            "type": "String",
+            "value": "[parameters('vmName')]"
+        },
+        "AdminPassword": {
+            "type": "String",
+            "value": "[parameters('adminPassword')]"
+        },
+        "DNSName": {
+            "type": "String",
+            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('ipName'))).dnsSettings.fqdn]"
+        },
+        "WorkspaceName": {
+            "type": "String",
+            "value": "[parameters('workspaceName')]"
+        }
+    }
+}
