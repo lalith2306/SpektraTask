@@ -219,10 +219,6 @@
             "type": "String",
             "value": "[parameters('vmName')]"
         },
-        "DNSName": {
-            "type": "String",
-            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('ipName'))).dnsSettings.fqdn]"
-        },
         "WorkspaceName": {
             "type": "String",
             "value": "[parameters('workspaceName')]"
