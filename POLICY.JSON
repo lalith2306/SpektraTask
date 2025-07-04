@@ -1,56 +1,231 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "resources": [
-    {
-      "type": "Microsoft.Authorization/policyDefinitions",
-      "apiVersion": "2021-06-01",
-      "name": "custom-policy",
-      "properties": {
-        "displayName": "custom-policy",
-        "policyType": "Custom",
-        "mode": "Indexed",
-        "description": "Custom policy description",
-        "metadata": {
-          "version": "1.0.0",
-          "category": "General"
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "String"
         },
-        "policyRule": {
-          "if": {
-            "allOf": [
-              {
-                "field": "location",
-                "notIn": [
-                  "centralus",
-                  "eastus"
-                ]
-              },
-              {
-                "field": "type",
-                "equals": "Microsoft.Compute/virtualMachines"
-              }
-            ]
-          },
-          "then": {
-            "effect": "deny"
-          }
+        "DeploymentID": {
+            "type": "String"
+        },
+        "adminUsername": {
+            "type": "String",
+            "metadata": {
+                "description": "Admin username for the VM"
+            }
+        },
+        "adminPassword": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "Admin password for the VM"
+            }
+        },
+        "scriptUrl": {
+            "defaultValue": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Working.ps1",
+            "type": "String",
+            "metadata": {
+                "description": "URL to the consolidated PowerShell script"
+            }
+        },
+        "dcrName": {
+            "defaultValue": "myDCR",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Data Collection Rule resource"
+            }
+        },
+        "workspaceName": {
+            "defaultValue": "logWorkspace",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Log Analytics workspace"
+            }
+        },
+        "location": {
+            "defaultValue": "eastus",
+            "allowedValues": [
+                "eastus",
+                "westus",
+                "centralus"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources"
+            }
         }
-      }
     },
-    {
-      "type": "Microsoft.Authorization/policyAssignments",
-      "apiVersion": "2021-06-01",
-      "name": "custom-policy-assignment",
-      "dependsOn": [
-        "[resourceId('Microsoft.Authorization/policyDefinitions', 'custom-policy')]"
-      ],
-      "properties": {
-        "description": "Enforce VM location policy",
-        "displayName": "custom-policy-assignment",
-        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'custom-policy')]",
-        "scope": "[subscription().id]",
-        "enforcementMode": "Default"
-      }
+    "variables": {
+        "depId": "[parameters('DeploymentID')]",
+        "vnetName": "[concat('vnet-', parameters('vmName'), '-', variables('depId'))]",
+        "subnetName": "[concat('subnet-', parameters('vmName'), '-', variables('depId'))]",
+        "nsgName": "[concat('nsg-', parameters('vmName'), '-', variables('depId'))]",
+        "nicName": "[concat('nic-', parameters('vmName'), '-', variables('depId'))]",
+        "ipName": "[concat('pip-', parameters('vmName'), '-', variables('depId'))]",
+        "dnsLabelPrefix": "[concat(toLower(parameters('vmName')), '-dns-', uniqueString(resourceGroup().id, parameters('vmName')))]",
+        "vmSize": "Standard_D2s_v3",
+        "imagePublisher": "MicrosoftWindowsServer",
+        "imageOffer": "WindowsServer",
+        "imageSku": "2019-Datacenter",
+        "imageVersion": "latest",
+        "securitySolutionName": "Security",
+        "dcrAssociationName": "[concat(parameters('dcrName'), '-association')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2022-10-01",
+            "name": "[parameters('workspaceName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "retentionInDays": 30,
+                "features": {
+                    "enableLogAccessUsingOnlyResourcePermissions": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationsManagement/solutions",
+            "apiVersion": "2015-11-01-preview",
+            "name": "[concat('Security(', parameters('workspaceName'), ')')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+            ],
+            "plan": {
+                "name": "[concat('Security(', parameters('workspaceName'), ')')]",
+                "publisher": "Microsoft",
+                "product": "OMSGallery/Security",
+                "promotionCode": ""
+            },
+            "properties": {
+                "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('vmName'), '/AzureMonitorWindowsAgent')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Azure.Monitor",
+                "type": "AzureMonitorWindowsAgent",
+                "typeHandlerVersion": "1.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "authentication": {
+                        "managedIdentity": {
+                            "identifier-name": "mi-res-id",
+                            "identifier-value": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Insights/dataCollectionRules",
+            "apiVersion": "2021-09-01-preview",
+            "name": "[parameters('dcrName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+                "[resourceId('Microsoft.OperationsManagement/solutions', concat('Security(', parameters('workspaceName'), ')'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'AzureMonitorWindowsAgent')]"
+            ],
+            "properties": {
+                "dataSources": {
+                    "windowsEventLogs": [
+                        {
+                            "name": "securityEvents",
+                            "streams": [
+                                "Microsoft-SecurityEvent"
+                            ],
+                            "xPathQueries": [
+                                "Security!*[System[(EventID=4663)]]"
+                            ]
+                        }
+                    ]
+                },
+                "destinations": {
+                    "logAnalytics": [
+                        {
+                            "name": "logAnalyticsDestination",
+                            "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+                        }
+                    ]
+                },
+                "dataFlows": [
+                    {
+                        "streams": [
+                            "Microsoft-SecurityEvent"
+                        ],
+                        "destinations": [
+                            "logAnalyticsDestination"
+                        ],
+                        "outputStream": "Microsoft-SecurityEvent"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Insights/dataCollectionRuleAssociations",
+            "apiVersion": "2021-09-01-preview",
+            "name": "[variables('dcrAssociationName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
+                "[resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName'))]"
+            ],
+            "properties": {
+                "dataCollectionRuleId": "[resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName'))]",
+                "description": "Associates the DCR with the VM"
+            },
+            "scope": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('vmName'), '/CustomScriptExtension')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
+                "[resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.10",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[parameters('scriptUrl')]"
+                    ],
+                    "commandToExecute": "[concat('powershell -Command \"Invoke-WebRequest -Uri ''', parameters('scriptUrl'), ''' -OutFile ''C:\\Working.ps1''; powershell.exe -ExecutionPolicy Bypass -File ''C:\\Working.ps1''\"')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "AdminUsername": {
+            "type": "String",
+            "value": "[parameters('adminUsername')]"
+        },
+        "VMName": {
+            "type": "String",
+            "value": "[parameters('vmName')]"
+        },
+        "DNSName": {
+            "type": "String",
+            "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('ipName'))).dnsSettings.fqdn]"
+        },
+        "WorkspaceName": {
+            "type": "String",
+            "value": "[parameters('workspaceName')]"
+        }
     }
-  ]
 }
