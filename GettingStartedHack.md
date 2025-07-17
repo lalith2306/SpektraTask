@@ -1,5 +1,6 @@
-# Hands On Lab: Activate Activate GenAI with Azure - Hackathon
+# Activate Activate GenAI with Azure - Hackathon
 
+Welcome to the Activate GenAI Hackathon! Today, you're set to dive into the transformative world of AI, with a focus on utilizing the power of Azure OpenAI services. Prepare yourself for a day of intense learning, innovation, and hands-on experience that will elevate your understanding of AI integration in application development.
 ### Overall Estimated Duration: 60 minutes
 
 ## Overview
@@ -119,8 +120,20 @@ To adjust the zoom level for the environment page, click the **A↕ : 100%** ico
 4. If prompted to stay signed in, you can click **No**.
  
 5. If a **Welcome to Microsoft Azure** pop-up window appears, simply click **Cancel** to skip the tour.
-  
+
    ![Click on cancel](../media/imageae.png)
+   
+ >**NOTE:** If you don't have the Microsoft Authenticator app installed on your mobile device, select **Download** now and follow the steps.
+
+6. On the Set up your account page, select Next.
+7. Scan the QR code with your phone. On the phone, inside the Authenticator app, select Work or school account, and scan the QR code. Select Next.
+8. On the Keep your account secure page. Enter the code, which is shown on the Authenticator app.
+9. Once the code is entered. click Next
+10. Select Done on the Success! page.
+11. If you see the pop-up Stay Signed in?, click No.
+12. If you see the pop-up You have free Azure Advisor recommendations!, close the window to continue the lab.
+13. If a Welcome to Microsoft Azure popup window appears, click Cancel to skip the tour.
+  
 
 ## Support Contact
  
