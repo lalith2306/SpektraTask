@@ -1,7 +1,8 @@
 # Activate Activate GenAI with Azure - Hackathon
 
 Welcome to the Activate GenAI Hackathon! Today, you're set to dive into the transformative world of AI, with a focus on utilizing the power of Azure OpenAI services. Prepare yourself for a day of intense learning, innovation, and hands-on experience that will elevate your understanding of AI integration in application development.
-### Overall Estimated Duration: 60 minutes
+
+### Overall Estimated Duration: 120 minutes
 
 ## Overview
 
@@ -17,6 +18,24 @@ The primary objective of this challenge is to guide participants through the com
 
 - Expose and validate the model through an Azure Managed Online Endpoint by sending a test prompt and reviewing the output.
 
+## Hackathon Format: Challenge-Based
+This hackathon adopts a challenge-based format, offering you a unique opportunity to learn while dealing with practical problems. Each challenge includes one or more self-contained tasks designed to test and enhance your skills in specific aspects of AI app development. You will approach these challenges by:
+
+Analyzing the problem statement.
+Strategizing your approach to find the most effective solution.
+Leveraging the provided lab environment and Azure AI services.
+Collaborating with peers to refine and implement your solutions.
+
+## Challenges
+- Challenge 01: Deploy Azure OpenAI Service and LLM Models: Begin your journey by deploying the Azure OpenAI Service and integrating a Large Language Model (LLM). This will serve as the foundation for advanced linguistic intelligence in your applications.
+- Challenge 02: Implement Document Search with Azure AI Search: Construct an Azure AI Search solution to enable sophisticated document handling. Upload, index, and tailor the search experience using VS Code and Azure. This lays the groundwork for document-based questioning essential for Retriever-Augmented Generation (RAG) in OpenAI.
+
+Each challenge comes with its own set of tasks and objectives. Feel free to explore the challenges, learn, and have fun during this hackathon! If you have any questions, don't hesitate to reach out to your coach.
+
+Happy hacking! Feel free to explore the challenges, learn, and have fun during this hackathon! If you have any questions, don't hesitate to reach out to your coach.
+
+Happy hacking!
+
 ## Prerequisites
 
 - Before beginning the deployment process, users should have the following knowledge and tools in place to ensure a smooth experience:
@@ -27,13 +46,7 @@ The primary objective of this challenge is to guide participants through the com
 
 - Container & Model Knowledge: Basic understanding of Docker containers, model inference concepts, and NVIDIA’s NeMo Inference Manager (NIM) or experience working with LLMs like LLaMA.
 
-## Architecture
 
-The deployment workflow begins with the developer generating an NGC API key from their NVIDIA build account to access prebuilt model containers like Llama-3.1-8B from NGC (NVIDIA GPU Cloud). Using tools like Git Bash and VS Code, the developer downloads the NIM container and configures the environment to build and push the container to Azure Container Registry (ACR). Next, using the Azure CLI, they set up the Azure Machine Learning (AML) workspace, and deploy the container as a Managed Online Endpoint. Finally, the endpoint is exposed and tested by sending inference requests via REST API, completing the model deployment lifecycle.
-
-## Architecture Diagram
-
-![](../media/28-08-2024.png "Architecture Diagram")
 
 ## Explanation of Components
 
