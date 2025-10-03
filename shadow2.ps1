@@ -23,10 +23,8 @@ Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 
 # Import Common Functions
-$path = pwd
-$path = $path.Path
-$commonscriptpath = "$path\cloudlabs-common\cloudlabs-windows-functions.ps1"
-. $commonscriptpath
+$shadowScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "shadow.ps1"
+. $shadowScriptPath
 
 # ---------------------------
 # 1. Conditional Non-Admin User Creation
@@ -73,4 +71,5 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
 
