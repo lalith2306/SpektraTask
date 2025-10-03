@@ -7,7 +7,14 @@ Param (
     [string] $provisionNonAdminUser,
     [string] $vmNonAdminUserName,
     [string] $vmNonAdminPassword,
+    [string] $AzureSubscriptionID,
+    [string] $AzureTenantID,
     [string] $ODLID,
+    [string] $labUUID,
+    [string] $DeploymentID,
+    [string] $AzureUserName,
+    [string] $AzurePassword,
+    [string] $userEmail,
     [string] $InstallCloudLabsShadow
 )
 
