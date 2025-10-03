@@ -123,8 +123,8 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://lalithstr0901.blob.core.windows.net/test/shadow2.ps1",
-            "https://lalithstr0901.blob.core.windows.net/test/shadow.ps1"
+            "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow2.ps1",
+            "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow.ps1"
           ]
         },
         "protectedSettings": {
@@ -141,3 +141,4 @@
     "DeploymentID": { "type": "String", "value": "[parameters('DeploymentID')]" }
   }
 }
+
