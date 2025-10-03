@@ -1,4 +1,3 @@
- 
 #Function1 - Disable Enhanced Security for Internet Explorer
 Function Disable-InternetExplorerESC
 {
@@ -809,4 +808,5 @@ function Enable-GitHub {
             }
         }
     }
+
 }
