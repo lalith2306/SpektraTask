@@ -4,8 +4,9 @@
   "parameters": {
     "adminUsername": { "type": "string", "metadata": { "description": "Admin username" } },
     "adminPassword": { "type": "securestring", "metadata": { "description": "Admin password" } },
-    "vmNonAdminUsername": { "type": "string", "metadata": { "description": "Non-Admin username" } },
-    "vmNonAdminPassword": { "type": "securestring", "metadata": { "description": "Non-Admin password" } },
+    "vmNonAdminUsername": { "type": "string", "defaultValue": "", "metadata": { "description": "Non-Admin username (optional)" } },
+    "vmNonAdminPassword": { "type": "securestring", "defaultValue": "", "metadata": { "description": "Non-Admin password (optional)" } },
+    "provisionNonAdminUser": { "type": "string", "defaultValue": "no", "allowedValues": ["yes", "no"], "metadata": { "description": "Whether to provision non-admin user" } },
     "AzureUserName": { "type": "string" },
     "AzurePassword": { "type": "securestring" },
     "ODLID": { "type": "string" },
@@ -18,7 +19,7 @@
   },
   "variables": {
     "cloudlabsCommon": "[concat(' -AzureUserName ', parameters('AzureUserName'), ' -AzurePassword ', parameters('AzurePassword'), ' -AzureTenantID ', subscription().tenantId, ' -AzureSubscriptionID ', subscription().subscriptionId, ' -ODLID ', parameters('ODLID'), ' -InstallCloudLabsShadow ', parameters('InstallCloudLabsShadow'))]",
-    "Enable-CloudLabsEmbeddedShadow": "[concat(' -vmAdminUsername ', parameters('adminUsername'), ' -vmAdminPassword ', parameters('adminPassword'), ' -vmNonAdminUsername ', parameters('vmNonAdminUsername'), ' -vmNonAdminPassword ', parameters('vmNonAdminPassword'), ' -trainerUserName ', parameters('trainerUserName'), ' -trainerUserPassword ', parameters('trainerUserPassword'), ' -userEmail ', parameters('userEmail'), ' -labUUID ', parameters('labUUID'), ' -DeploymentID ', parameters('DeploymentID'))]",
+    "Enable-CloudLabsEmbeddedShadow": "[concat(' -vmAdminUsername ', parameters('adminUsername'), ' -vmAdminPassword ', parameters('adminPassword'), ' -provisionNonAdminUser ', parameters('provisionNonAdminUser'), ' -vmNonAdminUsername ', parameters('vmNonAdminUsername'), ' -vmNonAdminPassword ', parameters('vmNonAdminPassword'), ' -trainerUserName ', parameters('trainerUserName'), ' -trainerUserPassword ', parameters('trainerUserPassword'), ' -userEmail ', parameters('userEmail'), ' -labUUID ', parameters('labUUID'), ' -DeploymentID ', parameters('DeploymentID'))]",
     "addressPrefix": "10.0.0.0/16",
     "subnetName": "Subnet",
     "subnetPrefix": "10.0.0.0/24",
