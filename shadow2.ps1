@@ -1,15 +1,15 @@
 Param (
     [Parameter(Mandatory = $true)]
     [string] $trainerUserName,
-
     [string] $trainerUserPassword,
-
     [string] $vmCustomImageOsState,
     [string] $vmAdminUserName,
     [string] $vmAdminPassword,
     [string] $provisionNonAdminUser,
     [string] $vmNonAdminUserName,
     [string] $vmNonAdminPassword,
+    [string] $AzureUserName,
+    [string] $AzureUserPassword,
     [string] $vmImageType
 )
 
@@ -68,3 +68,4 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
