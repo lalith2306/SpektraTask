@@ -8,9 +8,14 @@ Param (
     [string] $provisionNonAdminUser,
     [string] $vmNonAdminUserName,
     [string] $vmNonAdminPassword,
+    [string] $vmImageType,
     [string] $AzureUserName,
     [string] $AzureUserPassword,
-    [string] $vmImageType
+    [string] $ODLID,
+    [string] $InstallCloudLabsShadow,
+    [string] $labUUID,
+    [string] $userEmail,
+    [string] $DeploymentID
 )
 
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
@@ -68,4 +73,5 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
 
