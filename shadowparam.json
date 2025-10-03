@@ -14,6 +14,9 @@
     "vmNonAdminPassword": {
       "value": "Strongpassword!05"
     },
+    "provisionNonAdminUser": {
+      "value": "yes"
+    },
     "AzureUserName": {
       "value": "GET-AZUSER-UPN"
     },
