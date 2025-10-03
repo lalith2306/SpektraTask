@@ -134,10 +134,10 @@
     }
   ],
   "outputs": {
-    "LABVM Name": { "type": "String", "value": "[variables('vmName')]" },
-    "LABVM DNS Name": { "type": "String", "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))).dnsSettings.fqdn]" },
-    "LABVM Admin Username": { "type": "String", "value": "[parameters('adminUsername')]" },
-    "LABVM Admin Password": { "type": "String", "value": "[parameters('adminPassword')]" },
-    "Deployment ID": { "type": "String", "value": "[parameters('DeploymentID')]" }
+    "LABVMName": { "type": "String", "value": "[variables('vmName')]" },
+    "LABVMDNSName": { "type": "String", "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))).dnsSettings.fqdn]" },
+    "LABVMAdminUsername": { "type": "String", "value": "[parameters('adminUsername')]" },
+    "LABVMAdminPassword": { "type": "String", "value": "[parameters('adminPassword')]" },
+    "DeploymentID": { "type": "String", "value": "[parameters('DeploymentID')]" }
   }
 }
