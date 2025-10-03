@@ -6,7 +6,7 @@
     "adminPassword": { "type": "securestring", "metadata": { "description": "Admin password" } },
     "vmNonAdminUsername": { "type": "string", "defaultValue": "", "metadata": { "description": "Non-Admin username (optional)" } },
     "vmNonAdminPassword": { "type": "securestring", "defaultValue": "", "metadata": { "description": "Non-Admin password (optional)" } },
-    "provisionNonAdminUser": { "type": "string", "defaultValue": "no", "allowedValues": ["yes", "no"], "metadata": { "description": "Whether to provision non-admin user" } },
+    "provisionNonAdminUser": { "type": "string", "metadata": { "description": "Whether to provision non-admin user" } },
     "AzureUserName": { "type": "string" },
     "AzurePassword": { "type": "securestring" },
     "ODLID": { "type": "string" },
