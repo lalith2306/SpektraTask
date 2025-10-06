@@ -4,8 +4,8 @@ Param (
     [string] $vmAdminUserName,
     [string] $vmAdminPassword,
     [string] $provisionNonAdminUser,
-    [string] $vmNonAdminUserName = "",
-    [string] $vmNonAdminPassword= "",
+    [string] $vmNonAdminUserName,
+    [string] $vmNonAdminPassword,
     [string] $AzureSubscriptionID,
     [string] $AzureTenantID,
     [string] $ODLID,
@@ -70,4 +70,5 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 Write-Host "CloudLabs Embedded Shadow enabled for '$vmUserToShadow'."
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
 
