@@ -125,7 +125,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow.ps1",
+            "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow_common2.ps1",
             "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow2.ps1"
           ]
         },
@@ -143,4 +143,5 @@
     "DeploymentID": { "type": "String", "value": "[parameters('DeploymentID')]" }
   }
 }
+
 
