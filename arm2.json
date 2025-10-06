@@ -9,10 +9,10 @@
           "description": "Location for all resources."
         }
       },
-      "adminUsername": {
+      "vmAdminUsername": {
         "type": "string"
       },
-      "adminPassword": {
+      "vmAdminPassword": {
         "type": "securestring"
       },
       "azuserobjectid": {
@@ -47,14 +47,14 @@
     },
     "variables": {
       "subscriptionid": "[subscription().subscriptionId]",
-      "cloudlabsCommon": "[concat(' -AzureUserName ', parameters('AzureUserName'), ' -AzurePassword ', parameters('AzurePassword'), ' -AzureTenantID ', variables('AzureTenantID'), ' -AzureSubscriptionID ', variables('AzureSubscriptionID'), ' -ODLID ', parameters('ODLID'), ' -DeploymentID ', parameters('DeploymentID'),' -InstallCloudLabsShadow ', parameters('InstallCloudLabsShadow'),' -adminPassword ', parameters('adminPassword'))]",
-      "Enable-CloudLabsEmbeddedShadow": "[concat(' -adminUsername ', parameters('adminUsername'),' -trainerUserName ', parameters('trainerUserName'), ' -trainerUserPassword ', parameters('trainerUserPassword'))]",
+      "cloudlabsCommon": "[concat(' -AzureUserName ', parameters('AzureUserName'), ' -AzurePassword ', parameters('AzurePassword'), ' -AzureTenantID ', variables('AzureTenantID'), ' -AzureSubscriptionID ', variables('AzureSubscriptionID'), ' -ODLID ', parameters('ODLID'), ' -DeploymentID ', parameters('DeploymentID'),' -InstallCloudLabsShadow ', parameters('InstallCloudLabsShadow'),' -vmAdminPassword ', parameters('vmAdminPassword'))]",
+      "Enable-CloudLabsEmbeddedShadow": "[concat(' -vmAdminUsername ', parameters('vmAdminUsername'),' -trainerUserName ', parameters('trainerUserName'), ' -trainerUserPassword ', parameters('trainerUserPassword'))]",
       "AzureSubscriptionID": "[subscription().subscriptionId]",
       "AzureTenantID": "[subscription().tenantId]",
       "location": "[resourceGroup().location]",
       "rgName": "[resourceGroup().name]",
       "sqlusername": "labsqladmin",
-      "sqlpassword": "[parameters('adminPassword')]",
+      "sqlpassword": "[parameters('vmAdminPassword')]",
       "networkInterfaceName": "[concat(variables('prefix'), '-nic')]",
       "networkSecurityGroupName": "[concat(variables('prefix'), '-nsg')]",
       "prefix": "vm",
@@ -78,8 +78,8 @@
         "properties": {
           "osProfile": {
             "computerName": "[variables('vmName')]",
-            "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]",
+            "vmAdminUsername": "[parameters('vmAdminUsername')]",
+            "vmAdminPassword": "[parameters('vmAdminPassword')]",
             "windowsConfiguration": {
               "provisionVmAgent": "true"
             }
@@ -234,11 +234,11 @@
       },
       "LabVM Admin Username": {
         "type": "string",
-        "value": "[parameters('adminUsername')]"
+        "value": "[parameters('vmAdminUsername')]"
       },
       "LabVM Admin Password": {
         "type": "string",
-        "value": "[parameters('adminPassword')]"
+        "value": "[parameters('vmAdminPassword')]"
       },
       "Deployment ID": {
         "type": "string",
@@ -251,4 +251,5 @@
     }
 
   }
+
 
