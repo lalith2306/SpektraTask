@@ -27,7 +27,7 @@ $shadowScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "shadow_common2.ps1
 
 # 1. Conditional Non-Admin User Creation
 
-if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
+if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -and $vmNonAdminPassword) {
     Write-Host "ProvisionNonAdminUser=Yes. Creating Non-Admin user: $vmNonAdminUserName"
 
     $nonAdminPassword = ConvertTo-SecureString $vmNonAdminPassword -AsPlainText -Force
@@ -46,8 +46,12 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     $vmUserToShadow = $vmNonAdminUserName
 }
 else {
-    Write-Host "ProvisionNonAdminUser=No. Using Admin user for shadow."
+    Write-Host "ProvisionNonAdminUser=No or Non-Admin credentials missing. Using Admin user for shadow."
     $vmUserToShadow = $vmAdminUserName
+
+    # Assign empty strings to avoid null errors in function call
+    $vmNonAdminUserName = ""
+    $vmNonAdminPassword = ""
 }
 
 Start-Sleep -Seconds 5
@@ -66,4 +70,3 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 Write-Host "CloudLabs Embedded Shadow enabled for '$vmUserToShadow'."
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
-
