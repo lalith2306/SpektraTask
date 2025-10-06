@@ -42,6 +42,9 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     Write-Host "ProvisionNonAdminUser=No. Skipping Non-Admin user creation."
 }
 
+Add-LocalGroupMember -Group "Remote Desktop Users" -Member $vmNonAdminUserName
+Write-Host "Non-Admin user '$vmNonAdminUserName' added to Remote Desktop Users group."
+
 Start-Sleep -Seconds 5
 
 # Install CloudLabs Shadow
@@ -58,3 +61,4 @@ Write-Host "CloudLabs Embedded Shadow enabled for '$vmUserToShadow'."
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
