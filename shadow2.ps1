@@ -64,6 +64,10 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     Write-Host "Shadow target user set to Admin: $vmUserToShadow"
 }
 
+
+Add-LocalGroupMember -Group "Remote Desktop Users" -Member $vmNonAdminUserName
+Write-Host "Non-Admin user '$vmNonAdminUserName' added to Remote Desktop Users group."
+
 # ---------------------------
 # 5. Enable CloudLabs Embedded Shadow
 # ---------------------------
@@ -71,5 +75,6 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
 
 
