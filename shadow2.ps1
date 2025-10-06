@@ -26,9 +26,8 @@ Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -
 $shadowScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "shadow_common2.ps1"
 . $shadowScriptPath
 
-# ---------------------------
 # 1. Conditional Non-Admin User Creation
-# ---------------------------
+
 if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     Write-Host "ProvisionNonAdminUser=Yes. Creating Non-Admin user: $vmNonAdminUserName"
 
@@ -43,39 +42,19 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     Write-Host "ProvisionNonAdminUser=No. Skipping Non-Admin user creation."
 }
 
-# ---------------------------
-# 2. Wait 5 seconds
-# ---------------------------
 Start-Sleep -Seconds 5
 
-# ---------------------------
-# 3. Install CloudLabs Shadow
-# ---------------------------
+# Install CloudLabs Shadow
+
 InstallCloudLabsShadow $ODLID $InstallCloudLabsShadow
 
-# ---------------------------
-# 4. Determine vmUserToShadow
-# ---------------------------
-if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
-    $vmUserToShadow = $vmNonAdminUserName
-    Write-Host "Shadow target user set to Non-Admin: $vmUserToShadow"
-} else {
-    $vmUserToShadow = $vmAdminUserName
-    Write-Host "Shadow target user set to Admin: $vmUserToShadow"
-}
+# combined: Use already set shadow target
 
-Add-LocalGroupMember -Group "Remote Desktop Users" -Member $vmNonAdminUserName
-Write-Host "Non-Admin user '$vmNonAdminUserName' added to Remote Desktop Users group."
+Write-Host "Using shadow target user: $vmUserToShadow"
 
-# ---------------------------
-# 5. Enable CloudLabs Embedded Shadow
-# ---------------------------
-Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNonAdminUser $trainerUserName $trainerUserPassword
+# Enable CloudLabs Embedded Shadow for the previously determined user
+Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $trainerUserPassword
+Write-Host "CloudLabs Embedded Shadow enabled for '$vmUserToShadow'."
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
-
-
-
-
-
