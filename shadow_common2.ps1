@@ -121,18 +121,22 @@ Function Enable-CloudLabsEmbeddedShadow($vmAdminUsername, $vmNonAdminUsername, $
         Write-Host "ProvisionNonAdminUser=No. Shadow target user set to Admin: $vmUserToShadow"
     }
 
+    # Create Trainer Account and Add to Administrators Group
     $trainerUserPass = $trainerUserPassword | ConvertTo-SecureString -AsPlainText -Force
     if (-not (Get-LocalUser -Name $trainerUserName -ErrorAction SilentlyContinue)) {
         New-LocalUser -Name $trainerUserName -Password $trainerUserPass -FullName "$trainerUserName" -Description "CloudLabs EmbeddedShadow User" -PasswordNeverExpires
     }
     Add-LocalGroupMember -Group "Administrators" -Member "$trainerUserName" -ErrorAction SilentlyContinue
 
+    # Enable RDP shadowing in registry
     reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v Shadow /t REG_DWORD /d 2 -f
     Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name Shadow -Value 2
 
+    # Ensure required folders exist
     if (-not (Test-Path "C:\Packages")) { New-Item -Path "C:\Packages" -ItemType Directory | Out-Null }
     $drivepath="C:\Users\Public\Documents"
 
+    # Download required files
     $WebClient = New-Object System.Net.WebClient
     $WebClient.DownloadFile("https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/Shadow.ps1","$drivepath\Shadow.ps1")
     $WebClient.DownloadFile("https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/shadow.xml","$drivepath\shadow.xml")
@@ -140,12 +144,14 @@ Function Enable-CloudLabsEmbeddedShadow($vmAdminUsername, $vmNonAdminUsername, $
     $WebClient.DownloadFile("https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/executetaskscheduler.ps1","$drivepath\executetaskscheduler.ps1")
     $WebClient.DownloadFile("https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/shadowshortcut.ps1","$drivepath\shadowshortcut.ps1")
 
+    # Replace placeholders in downloaded files
     (Get-Content "$drivepath\Shadow.ps1" -Raw) -Replace "vmAdminUsernameValue", $vmUserToShadow | Set-Content "$drivepath\Shadow.ps1"
     (Get-Content "$drivepath\shadow.xml" -Raw) -Replace "vmAdminUsernameValue", $trainerUserName -Replace "ComputerNameValue", $env:ComputerName | Set-Content "$drivepath\shadow.xml"
     (Get-Content "$drivepath\shadowshortcut.ps1" -Raw) -Replace "vmAdminUsernameValue", $trainerUserName | Set-Content "$drivepath\shadowshortcut.ps1"
 
     Start-Sleep -Seconds 2
 
+    # Create scheduled tasks
     schtasks.exe /Create /XML $drivepath\shadow.xml /tn "ShadowTask"
 
     $Trigger = New-ScheduledTaskTrigger -AtLogOn
@@ -155,7 +161,6 @@ Function Enable-CloudLabsEmbeddedShadow($vmAdminUsername, $vmNonAdminUsername, $
 
     Write-Host "CloudLabs Embedded Shadow setup completed."
 }
-
 
 #Create Azure Credential File on Desktop
 Function CreateCredFile($AzureUserName, $AzurePassword, $AzureTenantID, $AzureSubscriptionID, $DeploymentID)
@@ -806,5 +811,6 @@ function Enable-GitHub {
             }
         }
     }
+
 
 }
