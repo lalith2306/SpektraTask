@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "admin123"
+    },
+    "adminPassword": {
+      "value": "StrongPassword!09"
+    },
+    "vmNonAdminUsername": {
+      "value": null
+    },
+    "vmNonAdminPassword": {
+      "value": null
+    },
+    "provisionNonAdminUser": {
+      "value": "no"
+    },
+    "AzureUserName": {
+      "value": "GET-AZUSER-UPN"
+    },
+    "AzurePassword": {
+      "value": "GET-AZUSER-PASSWORD"
+    },
+    "ODLID": {
+      "value": "GET-ODL-ID"
+    },
+    "DeploymentID": {
+      "value": "GET-DEPLOYMENT-ID"
+    },
+    "InstallCloudLabsShadow": {
+      "value": "yes"
+    },
+    "trainerUserName": {
+      "value": "trainer"
+    },
+    "trainerUserPassword": {
+      "value": "Strongpassword!03"
+    },
+    "userEmail": {
+      "value": "GET-USER-EMAIL-ID"
+    },
+    "labUUID": {
+      "value": "GET-ODL-UNIQUENAME"
+    }
+  }
+}
