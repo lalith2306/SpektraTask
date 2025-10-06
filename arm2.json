@@ -78,8 +78,8 @@
         "properties": {
           "osProfile": {
             "computerName": "[variables('vmName')]",
-            "vmAdminUsername": "[parameters('vmAdminUsername')]",
-            "vmAdminPassword": "[parameters('vmAdminPassword')]",
+            "adminUsername": "[parameters('vmAdminUsername')]",
+            "adminPassword": "[parameters('vmAdminPassword')]",
             "windowsConfiguration": {
               "provisionVmAgent": "true"
             }
@@ -251,5 +251,6 @@
     }
 
   }
+
 
 
