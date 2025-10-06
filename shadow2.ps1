@@ -26,8 +26,9 @@ Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -
 $shadowScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "shadow_common2.ps1"
 . $shadowScriptPath
 
+# ---------------------------
 # 1. Conditional Non-Admin User Creation
-
+# ---------------------------
 if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     Write-Host "ProvisionNonAdminUser=Yes. Creating Non-Admin user: $vmNonAdminUserName"
 
@@ -38,27 +39,37 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     } else {
         Write-Host "Non-Admin user '$vmNonAdminUserName' already exists. Skipping creation."
     }
-} else {
-    Write-Host "ProvisionNonAdminUser=No. Skipping Non-Admin user creation."
+
+    # Add to RDP group immediately after creation
+    Add-LocalGroupMember -Group "Remote Desktop Users" -Member $vmNonAdminUserName
+    Write-Host "Non-Admin user '$vmNonAdminUserName' added to Remote Desktop Users group."
+
+    # Set the shadow target to this non-admin
+    $vmUserToShadow = $vmNonAdminUserName
+}
+else {
+    Write-Host "ProvisionNonAdminUser=No. Using Admin user for shadow."
+    $vmUserToShadow = $vmAdminUserName
 }
 
-Add-LocalGroupMember -Group "Remote Desktop Users" -Member $vmNonAdminUserName
-Write-Host "Non-Admin user '$vmNonAdminUserName' added to Remote Desktop Users group."
-
+# ---------------------------
+# 2. Wait 5 seconds
+# ---------------------------
 Start-Sleep -Seconds 5
 
-# Install CloudLabs Shadow
-
+# ---------------------------
+# 3. Install CloudLabs Shadow
+# ---------------------------
 InstallCloudLabsShadow $ODLID $InstallCloudLabsShadow
 
-# combined: Use already set shadow target
-
+# ---------------------------
+# 4 & 5 combined: Use already set shadow target
+# ---------------------------
 Write-Host "Using shadow target user: $vmUserToShadow"
 
-# Enable CloudLabs Embedded Shadow for the previously determined user
+# Enable CloudLabs Embedded Shadow for the determined user
 Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $trainerUserPassword
 Write-Host "CloudLabs Embedded Shadow enabled for '$vmUserToShadow'."
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
-
