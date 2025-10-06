@@ -1,5 +1,4 @@
 Param (
-    [Parameter(Mandatory = $true)]
     [string] $trainerUserName,
     [string] $trainerUserPassword,
     [string] $vmAdminUserName,
@@ -67,3 +66,4 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 Write-Host "CloudLabs Embedded Shadow enabled for '$vmUserToShadow'."
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
