@@ -63,9 +63,11 @@ Write-Host "Using shadow target user: $vmUserToShadow"
 
 # Enable CloudLabs Embedded Shadow for the determined user
 
-Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $trainerUserPassword
+Enable-CloudLabsEmbeddedShadow $vmAdminUsername $vmNonAdminUsername $provisionNonAdminUser $trainerUserName $trainerUserPassword
+
 Write-Host "CloudLabs Embedded Shadow enabled for '$vmUserToShadow'."
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
+
 
