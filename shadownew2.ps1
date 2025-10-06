@@ -69,7 +69,3 @@ Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNo
 
 Write-Host "shadow2.ps1 execution completed."
 Stop-Transcript
-
-
-
-
