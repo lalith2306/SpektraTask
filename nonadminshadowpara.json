@@ -9,10 +9,10 @@
       "value": "StrongPassword!09"
     },
     "vmNonAdminUsername": {
-      "value": ""
+      "value": "no"
     },
     "vmNonAdminPassword": {
-      "value": ""
+      "value": "no"
     },
     "provisionNonAdminUser": {
       "value": "no"
@@ -46,3 +46,4 @@
     }
   }
 }
+
