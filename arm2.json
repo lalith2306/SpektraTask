@@ -136,7 +136,7 @@
             ]
           },
           "protectedSettings": {
-            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ms-spl-fabric/scripts/psscript.ps1', variables('cloudlabsCommon'),variables('Enable-CloudLabsEmbeddedShadow'))]"
+            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File shadow2.ps1', variables('cloudlabsCommon'),variables('Enable-CloudLabsEmbeddedShadow'))]"
           }
         }
       },
@@ -249,4 +249,5 @@
         "value": "[parameters('trainerUserPassword')]"
       }
     }
+
   }
