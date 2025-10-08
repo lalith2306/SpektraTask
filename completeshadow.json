@@ -1,3 +1,4 @@
+
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
@@ -27,8 +28,6 @@
     "subnetPrefix": "10.0.0.0/24",
     "virtualNetworkName": "labvNet",
     "vmName": "shadowvm",
-    "selectedUsername": "[if(equals(parameters('provisionNonAdminUser'), 'yes'), parameters('vmNonAdminUsername'), parameters('adminUsername'))]",
-    "selectedPassword": "[if(equals(parameters('provisionNonAdminUser'), 'yes'), parameters('vmNonAdminPassword'), parameters('adminPassword'))]",
     "networkInterfaceName": "[concat(variables('vmName'), '-nic')]",
     "networkSecurityGroupName": "[concat(variables('vmName'), '-nsg')]",
     "publicIpAddressName": "[toLower(concat(variables('vmName'), '-pip'))]",
@@ -108,8 +107,8 @@
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
-          "adminUsername": "[variables('selectedUsername')]",
-          "adminPassword": "[variables('selectedPassword')]"
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
         },
         "networkProfile": { "networkInterfaces": [{ "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]" }] }
       }
