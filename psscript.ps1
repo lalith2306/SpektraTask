@@ -1,14 +1,21 @@
-Param(
-    [Parameter(Mandatory = $true)]
+Param (
     [string] $trainerUserName,
     [string] $trainerUserPassword,
     [string] $vmAdminUserName,
     [string] $vmAdminPassword,
     [string] $provisionNonAdminUser,
     [string] $vmNonAdminUserName,
-    [string] $vmNonAdminPassword
+    [string] $vmNonAdminPassword,
+    [string] $AzureSubscriptionID,
+    [string] $AzureTenantID,
+    [string] $ODLID,
+    [string] $labUUID,
+    [string] $DeploymentID,
+    [string] $AzureUserName,
+    [string] $AzurePassword,
+    [string] $userEmail,
+    [string] $InstallCloudLabsShadow
 )
-
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls" 
@@ -202,3 +209,4 @@ else {
 Stop-Transcript
 
 Restart-Computer -Force
+
