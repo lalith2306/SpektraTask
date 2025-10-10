@@ -45,7 +45,7 @@ if ($trainerExists) {
     # Reset the password for trainer
     Set-LocalUser -Name $trainerUserName -Password $newTrainerPassword
 
-    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNonAdminUser $trainerUserName $trainerUserPassword
+    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNonAdminUser $trainerUserName $newTrainerPassword
  
 }
 else {
@@ -209,4 +209,5 @@ else {
 Stop-Transcript
 
 Restart-Computer -Force
+
 
