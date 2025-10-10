@@ -127,11 +127,11 @@
         "settings": {
           "fileUris": [
             "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow_common2.ps1",
-            "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow2.ps1"
+            "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/vmshadow/psscript.ps1"
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File shadow2.ps1 ', variables('cloudlabsCommon'), ' ', variables('Enable-CloudLabsEmbeddedShadow'))]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File psscript.ps1 ', variables('cloudlabsCommon'), ' ', variables('Enable-CloudLabsEmbeddedShadow'))]"
         }
       }
     }
@@ -144,3 +144,4 @@
     "DeploymentID": { "type": "String", "value": "[parameters('DeploymentID')]" }
   }
 }
+
