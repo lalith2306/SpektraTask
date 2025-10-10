@@ -470,7 +470,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
                 }
             }
         }
@@ -514,4 +514,5 @@
         }
     }
 }
+
 
