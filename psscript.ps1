@@ -20,11 +20,9 @@ Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -
 [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls" 
 
-#Import Common Functions
-$path = pwd
-$path = $path.Path
-$commonscriptpath = "$path" + "\cloudlabs-common\shadow_common2.ps1"
-. $commonscriptpath
+# Import Common Functions
+$shadowScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "shadow_common2.ps1"
+. $shadowScriptPath
 
 # Run Imported functions from cloudlabs-windows-functions.ps1
 #WindowsServerCommon
@@ -209,5 +207,6 @@ else {
 Stop-Transcript
 
 Restart-Computer -Force
+
 
 
