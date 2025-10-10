@@ -241,7 +241,7 @@
         "SetVmSecurityType": {
              "securityType": "[if(or(equals(parameters('vmSecurityType'), 'TrustedLaunchSupported'), equals(parameters('vmSecurityType'), 'ConfidentialVmSupported'), equals(parameters('vmSecurityType'), 'TrustedLaunchAndConfidentialVmSupported'), equals(parameters('vmSecurityType'), 'None')), '', parameters('vmSecurityType'))]"
         },
-        "customScriptExtensionURI": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
+        "customScriptExtensionURI": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/vmshadow/psscript.ps1",
         "cloudlabsExtensionURI": "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
     },
     "resources": [
@@ -514,3 +514,4 @@
         }
     }
 }
+
