@@ -1,20 +1,12 @@
-Param (
+Param(
     [Parameter(Mandatory = $true)]
-
-    [string]
-    $trainerUserName,
-
-    [string]
-    $trainerUserPassword,
-
-    [string]
-    #$vmCustomImageOsState,
-    $vmAdminUserName,
-    $vmAdminPassword,
-    $provisionNonAdminUser,
-    $vmNonAdminUserName,
-    $vmNonAdminPassword,
-    #$vmImageType
+    [string] $trainerUserName,
+    [string] $trainerUserPassword,
+    [string] $vmAdminUserName,
+    [string] $vmAdminPassword,
+    [string] $provisionNonAdminUser,
+    [string] $vmNonAdminUserName,
+    [string] $vmNonAdminPassword
 )
 
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
@@ -208,4 +200,5 @@ else {
 #>
 
 Stop-Transcript
+
 Restart-Computer -Force
