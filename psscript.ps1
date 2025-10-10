@@ -1,28 +1,31 @@
 Param (
-    [string] $trainerUserName,
-    [string] $trainerUserPassword,
-    [string] $vmAdminUserName,
-    [string] $vmAdminPassword,
-    [string] $provisionNonAdminUser,
-    [string] $vmNonAdminUserName,
-    [string] $vmNonAdminPassword,
-    [string] $AzureSubscriptionID,
-    [string] $AzureTenantID,
-    [string] $ODLID,
-    [string] $labUUID,
-    [string] $DeploymentID,
-    [string] $AzureUserName,
-    [string] $AzurePassword,
-    [string] $userEmail,
-    [string] $InstallCloudLabsShadow
+    [Parameter(Mandatory = $true)]
+
+    [string]
+    $trainerUserName,
+
+    [string]
+    $trainerUserPassword,
+
+    [string]
+    $vmCustomImageOsState,
+    $vmAdminUserName,
+    $vmAdminPassword,
+    $provisionNonAdminUser,
+    $vmNonAdminUserName,
+    $vmNonAdminPassword,
+    $vmImageType
 )
+
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls" 
 
-# Import Common Functions
-$shadowScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "shadow_common2.ps1"
-. $shadowScriptPath
+#Import Common Functions
+$path = pwd
+$path = $path.Path
+$commonscriptpath = "$path" + "\cloudlabs-common\cloudlabs-windows-functions.ps1"
+. $commonscriptpath
 
 # Run Imported functions from cloudlabs-windows-functions.ps1
 #WindowsServerCommon
@@ -43,11 +46,11 @@ if ($trainerExists) {
     # Reset the password for trainer
     Set-LocalUser -Name $trainerUserName -Password $newTrainerPassword
 
-    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNonAdminUser $trainerUserName $newTrainerPassword
+    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $trainerUserName $newTrainerPassword
  
 }
 else {
-    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $vmNonAdminUserName $provisionNonAdminUser $trainerUserName $trainerUserPassword
+    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $trainerUserName $updatedTrainerPassword
 }
 
 $username = $vmNonAdminUserName
@@ -108,7 +111,7 @@ if ($pNAUser -eq "yes") {
     }
 }
 
-<#
+
 #Password reset for adminuser if specialized image is used
 $existingusername = "$vmAdminUserName"
 $updatepassword = "$vmAdminPassword"
@@ -202,11 +205,5 @@ else {
     Write-Host "OS Type is not marketplace. Skipping disk allocation."
 }
 
-#>
-
 Stop-Transcript
-
 Restart-Computer -Force
-
-
-
