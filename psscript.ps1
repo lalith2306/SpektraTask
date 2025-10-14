@@ -138,66 +138,65 @@ $existingusername = "$vmAdminUserName"
 $updatepassword = "$vmAdminPassword"
 
 if ($vmCustomImageOsState -eq "specialized") {
-    
-    # Ensure the original admin is removed from the Administrators group and non-admin is added
+
+    # Ensure the admin user (azadmin) is removed from the Administrators group and non-admin (nonazadmin) is added
     if ($existingusername -eq $vmAdminUserName) {
-        # If current admin user is azadmin (or the current vmAdminUserName), make sure it is removed from Administrators group and added to Users group
         Write-Host "Ensuring '$vmAdminUserName' is removed from Administrators group and added to Users group."
-        Remove-LocalGroupMember -Group "Administrators" -Member $vmAdminUserName
+        if ((Get-LocalGroupMember -Group "Administrators" | Where-Object { $_.Name -eq $vmAdminUserName })) {
+            Remove-LocalGroupMember -Group "Administrators" -Member $vmAdminUserName
+        }
         Add-LocalGroupMember -Group "Users" -Member $vmAdminUserName
     }
 
-    # Ensure the non-admin user is correctly added to the Administrators group
-    
+    # Ensure the non-admin user (nonazadmin) is correctly added to the Administrators group if needed
     if ($existingusername -eq $vmNonAdminUserName) {
-        # If current non-admin user is nonazadmin (or the current vmNonAdminUserName), make sure it is added to Administrators group
         Write-Host "Adding '$vmNonAdminUserName' to Administrators group as it should be admin in the new VM."
         Add-LocalGroupMember -Group "Administrators" -Member $vmNonAdminUserName
     }
-    # Check if the user exists
+
+    # Check if the admin user exists and reset their password
     $adminExists = Get-LocalUser | Where-Object { $_.Name -eq $existingusername -and $_.Enabled -eq $true }
 
     if ($adminExists) {
         Write-Host "The admin user '$existingusername' exists and updating the password."
-        # Specify the username of the admin user whose password you want to reset
-        $exusername = "$existingusername"
 
         # Check if the admin user is a member of the Administrators group
         $isAdmin = Get-LocalGroupMember -Group "Administrators" | Where-Object { $_.Name -eq $existingusername }
 
         if (-not $isAdmin) {
-            Write-Host "Adding admin user '$existingusername' to Administrators group."
+            Write-Host "Adding '$existingusername' to the Administrators group."
             Add-LocalGroupMember -Group "Administrators" -Member $existingusername
         }
 
-        # Specify the new password
-        $newPassword = ConvertTo-SecureString "$updatepassword" -AsPlainText -Force
-
         # Reset the password for the admin user
-        Set-LocalUser -Name $exusername -Password $newPassword -PasswordNeverExpires $true
-        Set-LocalUser -Name $exusername -Description "Administrator Account"
+        $newPassword = ConvertTo-SecureString "$updatepassword" -AsPlainText -Force
+        Set-LocalUser -Name $existingusername -Password $newPassword -PasswordNeverExpires $true
+        Set-LocalUser -Name $existingusername -Description "Administrator Account"
+        
+        # Ensure password expiry is set for admin
+        Set-LocalUser -Name $existingusername -PasswordNeverExpires $true
+        Write-Host "Password expiry is set to 'Never Expires' for '$existingusername'."
     }
     else {
-        Write-Host "The admin user doesn't exists and creating new admin user."
-        $newuserUsername = "$existingusername"
-        $newuserpassword = "$updatepassword" 
-        $newadminPassword = ConvertTo-SecureString $newuserpassword -AsPlainText -Force
- 
-        # Create a new local user account
-        New-LocalUser -Name $newuserUsername -Password $newadminPassword  -Description "New Administrator Account" -AccountNeverExpires -UserMayNotChangePassword -PasswordNeverExpires
+        Write-Host "The admin user '$existingusername' does not exist and creating a new admin user."
+        $newadminPassword = ConvertTo-SecureString "$updatepassword" -AsPlainText -Force
 
-        # Add the user to the local administrators group
-        Add-LocalGroupMember -Group "Administrators" -Member $newuserUsername
+        # Create the new admin user if it doesn't exist
+        New-LocalUser -Name $existingusername -Password $newadminPassword -Description "New Administrator Account" -AccountNeverExpires -UserMayNotChangePassword -PasswordNeverExpires
+
+        # Add the new user to the Administrators group
+        Add-LocalGroupMember -Group "Administrators" -Member $existingusername
+        
+        # Ensure password expiry is set for admin
+        Set-LocalUser -Name $existingusername -PasswordNeverExpires $true
+        Write-Host "Password expiry is set to 'Never Expires' for new admin user '$existingusername'."
     }
 }
 else {
-
-    # Set password expiry for Admin user
-
+    Write-Host "The VM image is not specialized. Skipping admin user role and password reset."
+    # Set password expiry for Admin user if not specialized
     Set-LocalUser -Name $vmAdminUserName -PasswordNeverExpires $true
-
     Write-Host "Successfully set password expiry for $vmAdminUserName."
-
 }
 
 if ($vmImageType -eq "marketplace") {
@@ -243,5 +242,3 @@ else {
 
 Stop-Transcript
 Restart-Computer -Force
-
-
