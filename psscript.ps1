@@ -31,20 +31,9 @@ $commonscriptpath = "$path" + "\cloudlabs-common\cloudlabs-windows-functions.ps1
 #WindowsServerCommon
 #Enable-CloudLabsEmbeddedShadow $vmAdminUserName $trainerUserName $trainerUserPassword
 
-# Decide Shadow Target User
-if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
-    $vmUserToShadow = $vmNonAdminUserName
-    Write-Host "Final Shadow target set to Non-Admin: $vmUserToShadow"
-} else {
-    $vmUserToShadow = $vmAdminUserName
-    Write-Host "Final Shadow target set to Admin: $vmUserToShadow"
-}
-
-$vmAdminUsername = $vmUserToShadow
-
 #Password reset for trainer if specialized image is used
 $updatedTrainerPassword = "$trainerUserPassword"
-
+ 
 # Check if the trainer exists
 $trainerExists = Get-LocalUser | Where-Object { $_.Name -eq $trainerUserName -and $_.Enabled -eq $true }
  
@@ -57,11 +46,11 @@ if ($trainerExists) {
     # Reset the password for trainer
     Set-LocalUser -Name $trainerUserName -Password $newTrainerPassword
 
-    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $newTrainerPassword
+    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $trainerUserName $newTrainerPassword
  
 }
 else {
-    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $updatedTrainerPassword
+    Enable-CloudLabsEmbeddedShadow $vmAdminUserName $trainerUserName $updatedTrainerPassword
 }
 
 $username = $vmNonAdminUserName
