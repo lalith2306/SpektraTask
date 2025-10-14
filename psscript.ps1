@@ -138,7 +138,22 @@ $existingusername = "$vmAdminUserName"
 $updatepassword = "$vmAdminPassword"
 
 if ($vmCustomImageOsState -eq "specialized") {
+    
+    # Ensure the original admin is removed from the Administrators group and non-admin is added
+    if ($existingusername -eq $vmAdminUserName) {
+        # If current admin user is azadmin (or the current vmAdminUserName), make sure it is removed from Administrators group and added to Users group
+        Write-Host "Ensuring '$vmAdminUserName' is removed from Administrators group and added to Users group."
+        Remove-LocalGroupMember -Group "Administrators" -Member $vmAdminUserName
+        Add-LocalGroupMember -Group "Users" -Member $vmAdminUserName
+    }
 
+    # Ensure the non-admin user is correctly added to the Administrators group
+    
+    if ($existingusername -eq $vmNonAdminUserName) {
+        # If current non-admin user is nonazadmin (or the current vmNonAdminUserName), make sure it is added to Administrators group
+        Write-Host "Adding '$vmNonAdminUserName' to Administrators group as it should be admin in the new VM."
+        Add-LocalGroupMember -Group "Administrators" -Member $vmNonAdminUserName
+    }
     # Check if the user exists
     $adminExists = Get-LocalUser | Where-Object { $_.Name -eq $existingusername -and $_.Enabled -eq $true }
 
@@ -228,4 +243,5 @@ else {
 
 Stop-Transcript
 Restart-Computer -Force
+
 
