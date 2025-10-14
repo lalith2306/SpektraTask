@@ -64,6 +64,16 @@ else {
     Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $updatedTrainerPassword
 }
 
+# Check if the trainer user is a member of the Administrators group
+$isAdmin = Get-LocalGroupMember -Group "Administrators" | Where-Object { $_.Name -eq $trainerUserName }
+
+if (-not $isAdmin) {
+    Write-Host "Adding '$trainerUserName' to Administrators group."
+    Add-LocalGroupMember -Group "Administrators" -Member $trainerUserName
+} else {
+    Write-Host "$trainerUserName is already a member of the Administrators group."
+}
+
 $username = $vmNonAdminUserName
 $password = $vmNonAdminPassword
 $pNAUser = $provisionNonAdminUser
@@ -218,3 +228,4 @@ else {
 
 Stop-Transcript
 Restart-Computer -Force
+
