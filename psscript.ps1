@@ -40,8 +40,6 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     Write-Host "Final Shadow target set to Admin: $vmUserToShadow"
 }
 
-#$vmAdminUsername = $vmUserToShadow
-
 #Password reset for trainer if specialized image is used
 $updatedTrainerPassword = "$trainerUserPassword"
 
@@ -57,10 +55,15 @@ if ($trainerExists) {
     # Reset the password for trainer
     Set-LocalUser -Name $trainerUserName -Password $newTrainerPassword
 
+    $vmAdminUsername = $vmUserToShadow
+    
     Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $newTrainerPassword
  
 }
 else {
+    
+    $vmAdminUsername = $vmUserToShadow
+    
     Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $updatedTrainerPassword
 }
 
@@ -218,4 +221,5 @@ else {
 
 Stop-Transcript
 Restart-Computer -Force
+
 
