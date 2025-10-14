@@ -44,7 +44,7 @@ $vmAdminUsername = $vmUserToShadow
 
 #Password reset for trainer if specialized image is used
 $updatedTrainerPassword = "$trainerUserPassword"
- 
+
 # Check if the trainer exists
 $trainerExists = Get-LocalUser | Where-Object { $_.Name -eq $trainerUserName -and $_.Enabled -eq $true }
  
@@ -57,7 +57,7 @@ if ($trainerExists) {
     # Reset the password for trainer
     Set-LocalUser -Name $trainerUserName -Password $newTrainerPassword
 
-    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $trainerUserPassword
+    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $newTrainerPassword
  
 }
 else {
@@ -218,5 +218,3 @@ else {
 
 Stop-Transcript
 Restart-Computer -Force
-
-
