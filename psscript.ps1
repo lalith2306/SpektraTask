@@ -40,7 +40,7 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     Write-Host "Final Shadow target set to Admin: $vmUserToShadow"
 }
 
-$vmAdminUsername = $vmUserToShadow
+#$vmAdminUsername = $vmUserToShadow
 
 #Password reset for trainer if specialized image is used
 $updatedTrainerPassword = "$trainerUserPassword"
@@ -218,3 +218,4 @@ else {
 
 Stop-Transcript
 Restart-Computer -Force
+
