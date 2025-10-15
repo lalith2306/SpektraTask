@@ -31,38 +31,8 @@ $commonscriptpath = "$path" + "\cloudlabs-common\cloudlabs-windows-functions.ps1
 #WindowsServerCommon
 #Enable-CloudLabsEmbeddedShadow $vmAdminUserName $trainerUserName $trainerUserPassword
 
-# Decide Shadow Target User
-if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
-    $vmUserToShadow = $vmNonAdminUserName
-    Write-Host "Final Shadow target set to Non-Admin: $vmUserToShadow"
-} else {
-    $vmUserToShadow = $vmAdminUserName
-    Write-Host "Final Shadow target set to Admin: $vmUserToShadow"
-}
-
-$vmAdminUsername = $vmUserToShadow
-
 #Password reset for trainer if specialized image is used
 $updatedTrainerPassword = "$trainerUserPassword"
-
-# Check if the trainer exists
-$trainerExists = Get-LocalUser | Where-Object { $_.Name -eq $trainerUserName -and $_.Enabled -eq $true }
- 
-if ($trainerExists) {
-    Write-Host "The admin user '$trainerUserName' exists and updating the password."
- 
-    # Specify the new password
-    $newTrainerPassword = ConvertTo-SecureString "$updatedTrainerPassword" -AsPlainText -Force
- 
-    # Reset the password for trainer
-    Set-LocalUser -Name $trainerUserName -Password $newTrainerPassword
-
-    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $newTrainerPassword
- 
-}
-else {
-    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $updatedTrainerPassword
-}
 
 $username = $vmNonAdminUserName
 $password = $vmNonAdminPassword
@@ -219,3 +189,32 @@ else {
 Stop-Transcript
 Restart-Computer -Force
 
+# Decide Shadow Target User
+if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
+    $vmUserToShadow = $vmNonAdminUserName
+    Write-Host "Final Shadow target set to Non-Admin: $vmUserToShadow"
+} else {
+    $vmUserToShadow = $vmAdminUserName
+    Write-Host "Final Shadow target set to Admin: $vmUserToShadow"
+}
+
+$vmAdminUsername = $vmUserToShadow
+
+# Check if the trainer exists
+$trainerExists = Get-LocalUser | Where-Object { $_.Name -eq $trainerUserName -and $_.Enabled -eq $true }
+ 
+if ($trainerExists) {
+    Write-Host "The admin user '$trainerUserName' exists and updating the password."
+ 
+    # Specify the new password
+    $newTrainerPassword = ConvertTo-SecureString "$updatedTrainerPassword" -AsPlainText -Force
+ 
+    # Reset the password for trainer
+    Set-LocalUser -Name $trainerUserName -Password $newTrainerPassword
+
+    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $newTrainerPassword
+ 
+}
+else {
+    Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $updatedTrainerPassword
+}
