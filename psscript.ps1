@@ -31,9 +31,6 @@ $commonscriptpath = "$path" + "\cloudlabs-common\cloudlabs-windows-functions.ps1
 #WindowsServerCommon
 #Enable-CloudLabsEmbeddedShadow $vmAdminUserName $trainerUserName $trainerUserPassword
 
-#Password reset for trainer if specialized image is used
-$updatedTrainerPassword = "$trainerUserPassword"
-
 $username = $vmNonAdminUserName
 $password = $vmNonAdminPassword
 $pNAUser = $provisionNonAdminUser
@@ -186,9 +183,6 @@ else {
     Write-Host "OS Type is not marketplace. Skipping disk allocation."
 }
 
-Stop-Transcript
-Restart-Computer -Force
-
 # Decide Shadow Target User
 if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
     $vmUserToShadow = $vmNonAdminUserName
@@ -199,6 +193,9 @@ if ($provisionNonAdminUser -eq "yes" -and $vmNonAdminUserName -ne "") {
 }
 
 $vmAdminUsername = $vmUserToShadow
+
+#Password reset for trainer if specialized image is used
+$updatedTrainerPassword = "$trainerUserPassword"
 
 # Check if the trainer exists
 $trainerExists = Get-LocalUser | Where-Object { $_.Name -eq $trainerUserName -and $_.Enabled -eq $true }
@@ -218,3 +215,6 @@ if ($trainerExists) {
 else {
     Enable-CloudLabsEmbeddedShadow $vmUserToShadow $trainerUserName $updatedTrainerPassword
 }
+
+Stop-Transcript
+Restart-Computer -Force
