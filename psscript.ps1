@@ -17,8 +17,6 @@ Param (
     $vmImageType
 )
 
-$vmAdminUserName1 = $vmAdminUserName
-
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls" 
@@ -126,7 +124,7 @@ if ($pNAUser -eq "yes") {
 
 
 #Password reset for adminuser if specialized image is used
-$existingusername = "$vmAdminUserName1"
+$existingusername = "$vmAdminUserName"
 $updatepassword = "$vmAdminPassword"
 
 if ($vmCustomImageOsState -eq "specialized") {
@@ -171,9 +169,9 @@ else {
 
     # Set password expiry for Admin user
 
-    Set-LocalUser -Name $vmAdminUserName1 -PasswordNeverExpires $true
+    Set-LocalUser -Name $vmAdminUserName -PasswordNeverExpires $true
 
-    Write-Host "Successfully set password expiry for $vmAdminUserName1."
+    Write-Host "Successfully set password expiry for $vmAdminUserName."
 
 }
 
@@ -220,3 +218,4 @@ else {
 
 Stop-Transcript
 Restart-Computer -Force
+
