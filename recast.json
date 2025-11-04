@@ -6,9 +6,9 @@
     "virtualMachine1Size":{"type": "string"},
     "virtualMachine2Size":{"type": "string"},
     "virtualMachine3Size":{"type": "string"},
-    "vm1name":{"type": "string"},
-    "vm2name":{"type": "string"},
-    "vm3name":{"type": "string"},
+    "vm1Name":{"type": "string"},
+    "vm2Name":{"type": "string"},
+    "vm3Name":{"type": "string"},
     "vm1ImageId":{"type": "string"},
     "vm2ImageId":{"type": "string"},
     "vm3ImageId":{"type": "string"},
@@ -26,16 +26,16 @@
     "subnetName": "subnet",
     "addressPrefix": "10.0.0.0/16",
     "subnetPrefix": "10.0.0.0/24",
-    "vm1NIC":"[concat('nic-', parameters('vm1name'))]",
-    "vm2NIC": "[concat('nic-', parameters('vm2name'))]",
-    "vm3NIC": "[concat('nic-', parameters('vm3name'))]",
+    "vm1NIC":"[concat('nic-', parameters('vm1Name'))]",
+    "vm2NIC": "[concat('nic-', parameters('vm2Name'))]",
+    "vm3NIC": "[concat('nic-', parameters('vm3Name'))]",
     "nsgName": "[concat('nsg-', parameters('DeploymentID'))]",
     "publicIpAddressNamevm1": "[concat(parameters('vm1Name'), '-pip')]",
-    "publicIpAddressDNSNamevm1": "[toLower(concat(parameters('vm1name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
-    "publicIpAddressNamevm2": "[concat(parameters('vm2name'), '-pip')]",
-    "publicIpAddressDNSNamevm2": "[toLower(concat(parameters('vm2name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
-    "publicIpAddressNamevm3": "[concat(parameters('vm3name'), '-pip')]",
-    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]"
+    "publicIpAddressDNSNamevm1": "[toLower(concat(parameters('vm1Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
+    "publicIpAddressNamevm2": "[concat(parameters('vm2Name'), '-pip')]",
+    "publicIpAddressDNSNamevm2": "[toLower(concat(parameters('vm2Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
+    "publicIpAddressNamevm3": "[concat(parameters('vm3Name'), '-pip')]",
+    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]"
   },
   "resources": [
  
@@ -306,7 +306,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2024-07-01",
-      "name": "[parameters('vm2name')]",
+      "name": "[parameters('vm2Name')]",
       "location": "[variables('region')]",
       "dependsOn": [ "[resourceId('Microsoft.Network/networkInterfaces', variables('vm2NIC'))]" ],
       "properties": {
@@ -333,10 +333,10 @@
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2015-06-15",
-            "name": "[concat(parameters('vm2name'),'/', 'winExtension')]",
+            "name": "[concat(parameters('vm2Name'),'/', 'winExtension')]",
             "location": "[variables('region')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vm2name'))]"
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vm2Name'))]"
             ],
             "tags": {
                 "displayName": "VM2 Extension"
@@ -378,7 +378,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2024-07-01",
-      "name": "[parameters('vm3name')]",
+      "name": "[parameters('vm3Name')]",
       "location": "[variables('region')]",
       "dependsOn": [ "[resourceId('Microsoft.Network/networkInterfaces', variables('vm3NIC'))]" ],
       "properties": {
@@ -405,10 +405,10 @@
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2015-06-15",
-            "name": "[concat(parameters('vm3name'),'/', 'winExtension')]",
+            "name": "[concat(parameters('vm3Name'),'/', 'winExtension')]",
             "location": "[variables('region')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vm3name'))]"
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vm3Name'))]"
             ],
             "tags": {
                 "displayName": "VM3 Extension"
