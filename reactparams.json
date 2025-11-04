@@ -23,6 +23,12 @@
     "vm3name": {
       "value": "Win11-VM"
     },
+    "dnsServers": {
+    "value": [
+        "10.0.0.8",
+        "8.8.8.8"
+    ]
+    },
     "vm1ImageId": {
       "value": "/subscriptions/958c437f-48ef-4f21-bfa6-8281721060be/resourceGroups/cloudlabs-mgmt-images/providers/Microsoft.Compute/galleries/RecastPOCImageGallery/images/50317-ImageDefinition-Specialized/versions/2.0.1"
     },
