@@ -26,7 +26,7 @@
     "subnetName": "subnet",
     "addressPrefix": "10.0.0.0/16",
     "subnetPrefix": "10.0.0.0/24",
-    "vm1NIC":"[concat('nic-', parameters('vm1Name'))]",
+    "vm1NIC":"[concat('nic-', parameters('vm1name'))]",
     "vm2NIC": "[concat('nic-', parameters('vm2name'))]",
     "vm3NIC": "[concat('nic-', parameters('vm3name'))]",
     "nsgName": "[concat('nsg-', parameters('DeploymentID'))]",
@@ -49,7 +49,7 @@
           "addressPrefixes": [ "[variables('addressPrefix')]" ]
         },
         "dhcpOptions": {
-          "dnsServers": [parameters('dnsServers')]
+          "dnsServers": "[parameters('dnsServers')]"
         },
         "subnets": [
           {
@@ -313,7 +313,7 @@
         "hardwareProfile": { "vmSize": "[parameters('virtualMachine2Size')]"},
         "storageProfile": {
           "imageReference": {
-            "id": "[parameters('vm3ImageId')]"
+            "id": "[parameters('vm2ImageId')]"
           },
           "osDisk": {
             "createOption": "FromImage",
@@ -385,7 +385,7 @@
         "hardwareProfile": { "vmSize": "[parameters('virtualMachine3Size')]" },
         "storageProfile": {
           "imageReference": {
-            "id": "[parameters('vm2ImageId')]"
+            "id": "[parameters('vm3ImageId')]"
           },
           "osDisk": {
             "createOption": "FromImage",
@@ -487,4 +487,3 @@
     }
   }
 }
-
