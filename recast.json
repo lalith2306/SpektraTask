@@ -49,7 +49,7 @@
           "addressPrefixes": [ "[variables('addressPrefix')]" ]
         },
         "dhcpOptions": {
-          "dnsServers": "[variables('dnsServers')]"
+          "dnsServers": "[parameters('dnsServers')]"
         },
         "subnets": [
           {
@@ -486,5 +486,4 @@
       "value": "RecastSoftware94!!"
     }
   }
-
 }
