@@ -32,12 +32,6 @@
     "vm3ImageId": {
       "value": "/subscriptions/958c437f-48ef-4f21-bfa6-8281721060be/resourceGroups/cloudlabs-mgmt-images/providers/Microsoft.Compute/galleries/RecastPOCImageGallery/images/50316-ImageDefinition-Specialized/versions/5.0.1"
     },
-    "dnsServers": {
-    "value": [
-        "10.0.0.8",
-        "8.8.8.8"
-     ]
-    },
     "vm1PrivateIP": {
       "value": "10.0.0.8"
     },
