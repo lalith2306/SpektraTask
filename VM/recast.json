@@ -15,7 +15,6 @@
     "vm1PrivateIP":{"type": "string"},
     "vm2PrivateIP":{"type": "string"},
     "vm3PrivateIP":{"type": "string"},
-    "dnsServers": { "type": "array" },
     "trainerUserName":{"type": "string"},
     "trainerUserPassword":{"type": "string"}
   },
@@ -26,6 +25,7 @@
     "subnetName": "subnet",
     "addressPrefix": "10.0.0.0/16",
     "subnetPrefix": "10.0.0.0/24",
+    "dnsServers": [ "10.0.0.8", "8.8.8.8" ],
     "vm1NIC":"[concat('nic-', parameters('vm1Name'))]",
     "vm2NIC": "[concat('nic-', parameters('vm2Name'))]",
     "vm3NIC": "[concat('nic-', parameters('vm3Name'))]",
@@ -49,7 +49,7 @@
           "addressPrefixes": [ "[variables('addressPrefix')]" ]
         },
         "dhcpOptions": {
-          "dnsServers": "[parameters('dnsServers')]"
+          "dnsServers": "[variables('dnsServers')]"
         },
         "subnets": [
           {
