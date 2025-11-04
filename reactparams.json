@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "DeploymentID": {
+      "value": "GET-DEPLOYMENT-ID"
+    },
+    "virtualMachine1Size": {
+      "value": "Standard_F4s_v2"
+    },
+    "virtualMachine2Size": {
+      "value": "Standard_F8s_v2"
+    },
+    "virtualMachine3Size": {
+      "value": "Standard_F4s_v2"
+    },
+    "vm1name": {
+      "value": "DC-VM"
+    },
+    "vm2name": {
+      "value": "RMS-VM"
+    },
+    "vm3name": {
+      "value": "Win11-VM"
+    },
+    "vm1ImageId": {
+      "value": "/subscriptions/958c437f-48ef-4f21-bfa6-8281721060be/resourceGroups/cloudlabs-mgmt-images/providers/Microsoft.Compute/galleries/RecastPOCImageGallery/images/50317-ImageDefinition-Specialized/versions/2.0.1"
+    },
+    "vm2ImageId": {
+      "value": "/subscriptions/958c437f-48ef-4f21-bfa6-8281721060be/resourceGroups/cloudlabs-mgmt-images/providers/Microsoft.Compute/galleries/RecastPOCImageGallery/images/50318-ImageDefinition-Specialized/versions/3.0.1"
+    },
+    "vm3ImageId": {
+      "value": "/subscriptions/958c437f-48ef-4f21-bfa6-8281721060be/resourceGroups/cloudlabs-mgmt-images/providers/Microsoft.Compute/galleries/RecastPOCImageGallery/images/50316-ImageDefinition-Specialized/versions/5.0.1"
+    },
+    "dnsServers": {
+      "value": [
+        "10.0.0.8",
+        "8.8.8.8"
+      ]
+    },
+    "vm1PrivateIP": {
+      "value": "10.0.0.8"
+    },
+    "vm2PrivateIP": {
+      "value": "10.0.0.9"
+    },
+    "vm3PrivateIP": {
+      "value": "10.0.0.10"
+    },
+    "trainerUserName": {
+      "value": "trainer"
+    },
+    "trainerUserPassword": {
+      "value": "GEN-PASSWORD"
+    }
+  }
+}
