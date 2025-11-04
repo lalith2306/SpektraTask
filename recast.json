@@ -12,10 +12,7 @@
     "vm1ImageId":{"type": "string"},
     "vm2ImageId":{"type": "string"},
     "vm3ImageId":{"type": "string"},
-    "dnsServers": {
-        "type": "array",
-        "defaultValue": [ "10.0.0.8", "8.8.8.8" ]
-    },
+    "dnsServers": {"type": "array"},
     "vm1PrivateIP":{"type": "string"},
     "vm2PrivateIP":{"type": "string"},
     "vm3PrivateIP":{"type": "string"},
@@ -489,4 +486,5 @@
       "value": "RecastSoftware94!!"
     }
   }
+
 }
