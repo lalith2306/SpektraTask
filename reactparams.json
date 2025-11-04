@@ -14,13 +14,13 @@
     "virtualMachine3Size": {
       "value": "Standard_F4s_v2"
     },
-    "vm1name": {
+    "vm1Name": {
       "value": "DC-VM"
     },
-    "vm2name": {
+    "vm2Name": {
       "value": "RMS-VM"
     },
-    "vm3name": {
+    "vm3Name": {
       "value": "Win11-VM"
     },
     "dnsServers": {
