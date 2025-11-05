@@ -41,6 +41,33 @@
     "vm3PrivateIP": {
       "value": "10.0.0.10"
     },
+    "vmCustomImageOsState": {
+      "value": "GET-VM-CUSTOM-IMAGE-OS-STATE"
+    },
+    "vmAdminUserName": {
+      "value": "GET-VM-USERNAME"
+    },
+    "vmAdminPassword": {
+        "value": "GET-VM-PASSWORD"
+    },
+    "provisionNonAdminUser": {
+        "value": "ENABLE-NONADMIN-VM-ACCOUNT"
+    },
+    "vmNonAdminUserName": {
+        "value": "GET-NONADMIN-VM-USERNAME"
+    },
+    "vmImageType": {
+        "value": "GET-VM-IMAGE-TYPE"
+    },
+    "useSamePasswordOrNot": {
+        "value": "USE-SAME-VM-PASSWORD-FOR-ALL"
+    },
+    "vmNonAdminPassword": {
+        "value": "GET-NONADMIN-VM-PASSWORD"
+    },
+    "genNonAdminPassword": {
+        "value": "GEN-PASSWORD"
+    },
     "trainerUserName": {
       "value": "trainer"
     },
