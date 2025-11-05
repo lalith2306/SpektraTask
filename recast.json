@@ -24,6 +24,8 @@
     "useSamePasswordOrNot": { "type": "string" },
     "vmNonAdminPassword": { "type": "securestring" },
     "genNonAdminPassword": { "type": "securestring" },
+    "genAdminPassword": { "type": "securestring"},
+    "vmAdminPassword": { "type": "securestring"},
     "trainerUserName":{"type": "string"},
     "trainerUserPassword":{"type": "string"}
   },
@@ -46,6 +48,7 @@
     "publicIpAddressNamevm3": "[concat(parameters('vm3Name'), '-pip')]",
     "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
     "vmPasswordNonAdmin": "[if(equals(parameters('useSamePasswordOrNot'), 'yes'), parameters('vmNonAdminPassword'), parameters('genNonAdminPassword'))]",
+    "vmPasswordAdmin": "[if(and(equals(parameters('useSamePasswordOrNot'), 'no'), equals(parameters('provisionNonAdminUser'), 'no')), parameters('genAdminPassword'), parameters('vmAdminPassword'))]",
     "customScriptExtensionURI": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
     "cloudlabsExtensionURI": "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
   },
