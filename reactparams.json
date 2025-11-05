@@ -68,6 +68,9 @@
     "genNonAdminPassword": {
         "value": "GEN-PASSWORD"
     },
+    "genAdminPassword": {
+        "value": "GEN-PASSWORD"
+    },
     "trainerUserName": {
       "value": "trainer"
     },
