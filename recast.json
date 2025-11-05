@@ -17,7 +17,6 @@
     "vm3PrivateIP":{"type": "string"},
     "vmCustomImageOsState": { "type": "string" },
     "vmAdminUserName": { "type": "string" },
-    "vmPasswordAdmin": { "type": "securestring" },
     "provisionNonAdminUser": { "type": "string" },
     "vmNonAdminUserName": { "type": "string" },
     "vmImageType": { "type": "string" },
