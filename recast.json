@@ -15,6 +15,15 @@
     "vm1PrivateIP":{"type": "string"},
     "vm2PrivateIP":{"type": "string"},
     "vm3PrivateIP":{"type": "string"},
+    "vmCustomImageOsState": { "type": "string" },
+    "vmAdminUserName": { "type": "string" },
+    "vmPasswordAdmin": { "type": "securestring" },
+    "provisionNonAdminUser": { "type": "string" },
+    "vmNonAdminUserName": { "type": "string" },
+    "vmImageType": { "type": "string" },
+    "useSamePasswordOrNot": { "type": "string" },
+    "vmNonAdminPassword": { "type": "securestring" },
+    "genNonAdminPassword": { "type": "securestring" },
     "trainerUserName":{"type": "string"},
     "trainerUserPassword":{"type": "string"}
   },
@@ -35,7 +44,10 @@
     "publicIpAddressNamevm2": "[concat(parameters('vm2Name'), '-pip')]",
     "publicIpAddressDNSNamevm2": "[toLower(concat(parameters('vm2Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
     "publicIpAddressNamevm3": "[concat(parameters('vm3Name'), '-pip')]",
-    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]"
+    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
+    "vmPasswordNonAdmin": "[if(equals(parameters('useSamePasswordOrNot'), 'yes'), parameters('vmNonAdminPassword'), parameters('genNonAdminPassword'))]",
+    "customScriptExtensionURI": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
+    "cloudlabsExtensionURI": "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
   },
   "resources": [
  
@@ -276,11 +288,13 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "https://cloudlabs-prod-templates-s3.s3.us-east-1.amazonaws.com/recast/dc.ps1"
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/dc.ps1",
+                      "[variables('customScriptExtensionURI')]",
+                      "[variables('cloudlabsExtensionURI')]"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File dc.ps1"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File dc.ps1; powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'),' ', parameters('vmCustomImageOsState'),' ', parameters('vmAdminUserName'),' ', variables('vmPasswordAdmin'),' ', parameters('provisionNonAdminUser'),' ', parameters('vmNonAdminUserName'),' ', variables('vmPasswordNonAdmin'),' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -348,11 +362,13 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                         "https://cloudlabs-prod-templates-s3.s3.us-east-1.amazonaws.com/recast/rms.ps1"
+                         "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/rms.ps1",
+                         "[variables('customScriptExtensionURI')]",
+                         "[variables('cloudlabsExtensionURI')]"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File rms.ps1"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File rms.ps1; powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'),' ', parameters('vmCustomImageOsState'),' ', parameters('vmAdminUserName'),' ', variables('vmPasswordAdmin'),' ', parameters('provisionNonAdminUser'),' ', parameters('vmNonAdminUserName'),' ', variables('vmPasswordNonAdmin'),' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -420,11 +436,13 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "https://cloudlabs-prod-templates-s3.s3.us-east-1.amazonaws.com/recast/windows.ps1"
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1",
+                      "[variables('customScriptExtensionURI')]",
+                      "[variables('cloudlabsExtensionURI')]"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File windows.ps1"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File windows.ps1; powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'),' ', parameters('vmCustomImageOsState'),' ', parameters('vmAdminUserName'),' ', variables('vmPasswordAdmin'),' ', parameters('provisionNonAdminUser'),' ', parameters('vmNonAdminUserName'),' ', variables('vmPasswordNonAdmin'),' ', parameters('vmImageType'))]"
                 }
         }
     },
