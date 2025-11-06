@@ -299,7 +299,7 @@
                     ]
                 },
                 "protectedSettings": {
-                  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& ./dc.ps1; & ./psscript.ps1\" ', variables('Enable-CloudLabsEmbeddedShadow'),' ', parameters('vmCustomImageOsState'),' ', parameters('vmAdminUserName'),' ', variables('vmPasswordAdmin'),' ', parameters('provisionNonAdminUser'),' ', parameters('vmNonAdminUserName'),' ', variables('vmPasswordNonAdmin'),' ', parameters('vmImageType'))]"
+                  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& \\\"$PSScriptRoot\\\\dc.ps1\\\"; & \\\"$PSScriptRoot\\\\psscript.ps1\\\"\" ', variables('Enable-CloudLabsEmbeddedShadow'),' \"', parameters('vmCustomImageOsState'),'\" \"', parameters('vmAdminUserName'),'\" \"', variables('vmPasswordAdmin'),'\" \"', parameters('provisionNonAdminUser'),'\" \"', parameters('vmNonAdminUserName'),'\" \"', variables('vmPasswordNonAdmin'),'\" \"', parameters('vmImageType'),'\"')]"
                 }
         }
     },
@@ -373,7 +373,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& ./rms.ps1; & ./psscript.ps1\" ', variables('Enable-CloudLabsEmbeddedShadow'),' ', parameters('vmCustomImageOsState'),' ', parameters('vmAdminUserName'),' ', variables('vmPasswordAdmin'),' ', parameters('provisionNonAdminUser'),' ', parameters('vmNonAdminUserName'),' ', variables('vmPasswordNonAdmin'),' ', parameters('vmImageType'))]"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& \\\"$PSScriptRoot\\\\rms.ps1\\\"; & \\\"$PSScriptRoot\\\\psscript.ps1\\\"\" ', variables('Enable-CloudLabsEmbeddedShadow'),' \"', parameters('vmCustomImageOsState'),'\" \"', parameters('vmAdminUserName'),'\" \"', variables('vmPasswordAdmin'),'\" \"', parameters('provisionNonAdminUser'),'\" \"', parameters('vmNonAdminUserName'),'\" \"', variables('vmPasswordNonAdmin'),'\" \"', parameters('vmImageType'),'\"')]"
                 }
         }
     },
@@ -447,7 +447,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& ./windows.ps1; & ./psscript.ps1\" ', variables('Enable-CloudLabsEmbeddedShadow'),' ', parameters('vmCustomImageOsState'),' ', parameters('vmAdminUserName'),' ', variables('vmPasswordAdmin'),' ', parameters('provisionNonAdminUser'),' ', parameters('vmNonAdminUserName'),' ', variables('vmPasswordNonAdmin'),' ', parameters('vmImageType'))]"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& \\\"$PSScriptRoot\\\\windows.ps1\\\"; & \\\"$PSScriptRoot\\\\psscript.ps1\\\"\" ', variables('Enable-CloudLabsEmbeddedShadow'),' \"', parameters('vmCustomImageOsState'),'\" \"', parameters('vmAdminUserName'),'\" \"', variables('vmPasswordAdmin'),'\" \"', parameters('provisionNonAdminUser'),'\" \"', parameters('vmNonAdminUserName'),'\" \"', variables('vmPasswordNonAdmin'),'\" \"', parameters('vmImageType'),'\"')]"
                 }
         }
     },
@@ -510,3 +510,4 @@
     }
   }
 }
+
