@@ -1,10 +1,12 @@
 {
   "Name": "Custom Bing Grounding Minimal",
+  "Id": null,
   "IsCustom": true,
-  "Description": "Minimal permissions for Azure AI Foundry Bing grounding",
+  "Description": "Minimal permissions for Azure AI Foundry Bing grounding.",
   "Actions": [
     "Microsoft.Bing/accounts/read",
     "Microsoft.Bing/accounts/listKeys",
     "Microsoft.CognitiveServices/accounts/read"
-  ]
+  ],
+  "NotActions": []
 }
