@@ -1,5 +1,22 @@
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
- 
+ Param (
+    [Parameter(Mandatory = $true)]
+
+    [string]
+    $trainerUserName,
+
+    [string]
+    $trainerUserPassword,
+
+    [string]
+    $vmCustomImageOsState,
+    $vmAdminUserName,
+    $vmAdminPassword,
+    $provisionNonAdminUser,
+    $vmNonAdminUserName,
+    $vmNonAdminPassword,
+    $vmImageType
+)
 # This script sets the DNS server to 10.0.0.8 for all active network adapters
  
 # Define the desired DNS servers
@@ -75,8 +92,16 @@ Write-Host "Root path is: $root"
 # Common-function
 . "$root\cloudlabs-windows-functions.ps1"
 
-# Run CSE
-. "$root\psscript.ps1"
-
+# Run actual CSE with parameters from ARM
+& "$root\psscript.ps1" `
+    $EnableCloudLabsEmbeddedShadow `
+    $vmCustomImageOsState `
+    $vmAdminUserName `
+    $vmPasswordAdmin `
+    $provisionNonAdminUser `
+    $vmNonAdminUserName `
+    $vmPasswordNonAdmin `
+    $vmImageType
+    
 # After everything is done, stop transcript
 Stop-Transcript
