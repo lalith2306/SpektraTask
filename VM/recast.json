@@ -276,7 +276,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "https://cloudlabs-prod-templates-s3.s3.us-east-1.amazonaws.com/recast/dc.ps1"
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/dc.ps1"
                     ]
                 },
                 "protectedSettings": {
@@ -348,7 +348,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                         "https://cloudlabs-prod-templates-s3.s3.us-east-1.amazonaws.com/recast/rms.ps1"
+                         "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/rms.ps1"
                     ]
                 },
                 "protectedSettings": {
@@ -420,7 +420,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "https://cloudlabs-prod-templates-s3.s3.us-east-1.amazonaws.com/recast/windows.ps1"
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1"
                     ]
                 },
                 "protectedSettings": {
@@ -487,3 +487,4 @@
     }
   }
 }
+
