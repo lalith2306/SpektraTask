@@ -15,16 +15,6 @@
     "vm1PrivateIP":{"type": "string"},
     "vm2PrivateIP":{"type": "string"},
     "vm3PrivateIP":{"type": "string"},
-    "vmCustomImageOsState": { "type": "string" },
-    "vmAdminUserName": { "type": "string" },
-    "provisionNonAdminUser": { "type": "string" },
-    "vmNonAdminUserName": { "type": "string" },
-    "vmImageType": { "type": "string" },
-    "useSamePasswordOrNot": { "type": "string" },
-    "vmNonAdminPassword": { "type": "securestring" },
-    "genNonAdminPassword": { "type": "securestring" },
-    "genAdminPassword": { "type": "securestring"},
-    "vmAdminPassword": { "type": "securestring"},
     "trainerUserName":{"type": "string"},
     "trainerUserPassword":{"type": "string"}
   },
@@ -45,14 +35,7 @@
     "publicIpAddressNamevm2": "[concat(parameters('vm2Name'), '-pip')]",
     "publicIpAddressDNSNamevm2": "[toLower(concat(parameters('vm2Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
     "publicIpAddressNamevm3": "[concat(parameters('vm3Name'), '-pip')]",
-    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
-    "vmPasswordNonAdmin": "[if(equals(parameters('useSamePasswordOrNot'), 'yes'), parameters('vmNonAdminPassword'), parameters('genNonAdminPassword'))]",
-    "vmPasswordAdmin": "[if(and(equals(parameters('useSamePasswordOrNot'), 'no'), equals(parameters('provisionNonAdminUser'), 'no')), parameters('genAdminPassword'), parameters('vmAdminPassword'))]",
-    "customScriptExtensionURI": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
-    "cloudlabsExtensionURI": "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1",
-    "dcScriptUri": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/dc.ps1",
-    "rmsScriptUri": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/rms.ps1",
-    "winScriptUri": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1"
+    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]"
   },
   "resources": [
  
@@ -293,13 +276,13 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "[variables('dcScriptUri')]",
-                      "[variables('customScriptExtensionURI')]",
-                      "[variables('cloudlabsExtensionURI')]"
+                      "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/VM/dc.ps1",
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
+                      "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
                     ]
                 },
                 "protectedSettings": {
-                  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& \\\"$PSScriptRoot\\\\dc.ps1\\\"; & \\\"$PSScriptRoot\\\\psscript.ps1\\\"\" ', variables('Enable-CloudLabsEmbeddedShadow'),' \"', parameters('vmCustomImageOsState'),'\" \"', parameters('vmAdminUserName'),'\" \"', variables('vmPasswordAdmin'),'\" \"', parameters('provisionNonAdminUser'),'\" \"', parameters('vmNonAdminUserName'),'\" \"', variables('vmPasswordNonAdmin'),'\" \"', parameters('vmImageType'),'\"')]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File dc.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -367,13 +350,13 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                         "[variables('rmsScriptUri')]",
-                         "[variables('customScriptExtensionURI')]",
-                         "[variables('cloudlabsExtensionURI')]"
+                         "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/VM/rms.ps1",
+                         "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
+                         "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& \\\"$PSScriptRoot\\\\rms.ps1\\\"; & \\\"$PSScriptRoot\\\\psscript.ps1\\\"\" ', variables('Enable-CloudLabsEmbeddedShadow'),' \"', parameters('vmCustomImageOsState'),'\" \"', parameters('vmAdminUserName'),'\" \"', variables('vmPasswordAdmin'),'\" \"', parameters('provisionNonAdminUser'),'\" \"', parameters('vmNonAdminUserName'),'\" \"', variables('vmPasswordNonAdmin'),'\" \"', parameters('vmImageType'),'\"')]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File rms.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -441,13 +424,13 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "[variables('winScriptUri')]",
-                      "[variables('customScriptExtensionURI')]",
-                      "[variables('cloudlabsExtensionURI')]"
+                      "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/VM/windows.ps1",
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
+                      "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& \\\"$PSScriptRoot\\\\windows.ps1\\\"; & \\\"$PSScriptRoot\\\\psscript.ps1\\\"\" ', variables('Enable-CloudLabsEmbeddedShadow'),' \"', parameters('vmCustomImageOsState'),'\" \"', parameters('vmAdminUserName'),'\" \"', variables('vmPasswordAdmin'),'\" \"', parameters('provisionNonAdminUser'),'\" \"', parameters('vmNonAdminUserName'),'\" \"', variables('vmPasswordNonAdmin'),'\" \"', parameters('vmImageType'),'\"')]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File windows.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -510,4 +493,3 @@
     }
   }
 }
-
