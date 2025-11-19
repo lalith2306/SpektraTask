@@ -276,13 +276,11 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/VM/dc.ps1",
-                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
-                      "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/dc.ps1"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File dc.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File dc.ps1"
                 }
         }
     },
@@ -350,13 +348,11 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                         "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/VM/rms.ps1",
-                         "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
-                         "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
+                         "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/rms.ps1"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File rms.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File rms.ps1"
                 }
         }
     },
@@ -424,13 +420,11 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                      "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/VM/windows.ps1",
-                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1",
-                      "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
+                      "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File windows.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File windows.ps1"
                 }
         }
     },
@@ -493,4 +487,3 @@
     }
   }
 }
-
