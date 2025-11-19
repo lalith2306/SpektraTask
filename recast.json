@@ -292,7 +292,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& { .\\\\dc.ps1; & .\\\\psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' \\\"', parameters('vmCustomImageOsState'), '\\\" \\\"', parameters('vmAdminUserName'), '\\\" \\\"', variables('vmPasswordAdmin'), '\\\" \\\"', parameters('provisionNonAdminUser'), '\\\" \\\"', parameters('vmNonAdminUserName'), '\\\" \\\"', variables('vmPasswordNonAdmin'), '\\\" \\\"', parameters('vmImageType'), '\\\" }\"')]"
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File dc.ps1"
                 }
         }
     },
@@ -366,7 +366,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& { .\\\\rms.ps1; & .\\\\psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' \\\"', parameters('vmCustomImageOsState'), '\\\" \\\"', parameters('vmAdminUserName'), '\\\" \\\"', variables('vmPasswordAdmin'), '\\\" \\\"', parameters('provisionNonAdminUser'), '\\\" \\\"', parameters('vmNonAdminUserName'), '\\\" \\\"', variables('vmPasswordNonAdmin'), '\\\" \\\"', parameters('vmImageType'), '\\\" }\"')]"
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File rms.ps1"
                 }
         }
     },
@@ -440,7 +440,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command \"& { .\\\\windows.ps1; & .\\\\psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' \\\"', parameters('vmCustomImageOsState'), '\\\" \\\"', parameters('vmAdminUserName'), '\\\" \\\"', variables('vmPasswordAdmin'), '\\\" \\\"', parameters('provisionNonAdminUser'), '\\\" \\\"', parameters('vmNonAdminUserName'), '\\\" \\\"', variables('vmPasswordNonAdmin'), '\\\" \\\"', parameters('vmImageType'), '\\\" }\"')]"
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File windows.ps1"
                 }
         }
     },
@@ -503,4 +503,5 @@
     }
   }
 }
+
 
