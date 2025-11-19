@@ -1,22 +1,16 @@
-Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
- Param (
-    [Parameter(Mandatory = $true)]
-
-    [string]
-    $trainerUserName,
-
-    [string]
-    $trainerUserPassword,
-
-    [string]
-    $vmCustomImageOsState,
-    $vmAdminUserName,
-    $vmAdminPassword,
-    $provisionNonAdminUser,
-    $vmNonAdminUserName,
-    $vmNonAdminPassword,
-    $vmImageType
+Param(
+    [string]$EnableCloudLabsEmbeddedShadow,
+    [string]$vmCustomImageOsState,
+    [string]$vmAdminUserName,
+    [string]$vmPasswordAdmin,
+    [string]$provisionNonAdminUser,
+    [string]$vmNonAdminUserName,
+    [string]$vmPasswordNonAdmin,
+    [string]$vmImageType
 )
+
+Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
+
 # This script sets the DNS server to 10.0.0.8 for all active network adapters
  
 # Define the desired DNS servers
@@ -101,7 +95,7 @@ Write-Host "Root path is: $root"
     $provisionNonAdminUser `
     $vmNonAdminUserName `
     $vmPasswordNonAdmin `
-    $vmImageType
+    $vmImageType 
     
 # After everything is done, stop transcript
 Stop-Transcript
