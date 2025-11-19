@@ -1,14 +1,3 @@
-Param(
-    [string]$EnableCloudLabsEmbeddedShadow,
-    [string]$vmCustomImageOsState,
-    [string]$vmAdminUserName,
-    [string]$vmPasswordAdmin,
-    [string]$provisionNonAdminUser,
-    [string]$vmNonAdminUserName,
-    [string]$vmPasswordNonAdmin,
-    [string]$vmImageType
-)
-
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 
 # This script sets the DNS server to 10.0.0.8 for all active network adapters
@@ -78,24 +67,7 @@ $trigger = New-ScheduledTaskTrigger -Once -At $getTime
 $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 # Register the task
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName $taskName2
- 
-$root = $PSScriptRoot
-
-Write-Host "Root path is: $root"
-
-# Common-function
-. "$root\cloudlabs-windows-functions.ps1"
-
-# Run actual CSE with parameters from ARM
-& "$root\psscript.ps1" `
-    $EnableCloudLabsEmbeddedShadow `
-    $vmCustomImageOsState `
-    $vmAdminUserName `
-    $vmPasswordAdmin `
-    $provisionNonAdminUser `
-    $vmNonAdminUserName `
-    $vmPasswordNonAdmin `
-    $vmImageType 
     
 # After everything is done, stop transcript
 Stop-Transcript
+
