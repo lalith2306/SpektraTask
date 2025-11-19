@@ -1,14 +1,3 @@
-Param(
-    [string]$EnableCloudLabsEmbeddedShadow,
-    [string]$vmCustomImageOsState,
-    [string]$vmAdminUserName,
-    [string]$vmPasswordAdmin,
-    [string]$provisionNonAdminUser,
-    [string]$vmNonAdminUserName,
-    [string]$vmPasswordNonAdmin,
-    [string]$vmImageType
-)
-
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 
 # Define the desired DNS server
@@ -30,23 +19,5 @@ Get-DnsClientServerAddress | Where-Object { $_.ServerAddresses -contains $dnsSer
 $password = ConvertTo-SecureString "RecastSoftware25!!" -AsPlainText -Force
 New-LocalUser -Name "RecastUser" -Password $password  -Description "New Administrator Account" -AccountNeverExpires -UserMayNotChangePassword -PasswordNeverExpires
 Add-LocalGroupMember -Group "Administrators" -Member "RecastUser"
-
-$root = $PSScriptRoot
-
-Write-Host "Root path is: $root"
-
-# Common-function
-. "$root\cloudlabs-windows-functions.ps1"
-
-# Run actual CSE with parameters from ARM
-& "$root\psscript.ps1" `
-    $EnableCloudLabsEmbeddedShadow `
-    $vmCustomImageOsState `
-    $vmAdminUserName `
-    $vmPasswordAdmin `
-    $provisionNonAdminUser `
-    $vmNonAdminUserName `
-    $vmPasswordNonAdmin `
-    $vmImageType 
 
 Stop-Transcript
