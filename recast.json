@@ -271,7 +271,7 @@
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2015-06-15",
-            "name": "[concat(parameters('vm1Name'),'/', 'winExtension')]",
+            "name": "[concat(parameters('vm1Name'),'/', 'win1Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/', parameters('vm1Name'))]"
@@ -345,7 +345,7 @@
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2015-06-15",
-            "name": "[concat(parameters('vm2Name'),'/', 'winExtension')]",
+            "name": "[concat(parameters('vm2Name'),'/', 'win2Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/', parameters('vm2Name'))]"
@@ -419,7 +419,7 @@
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2015-06-15",
-            "name": "[concat(parameters('vm3Name'),'/', 'winExtension')]",
+            "name": "[concat(parameters('vm3Name'),'/', 'win3Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/', parameters('vm3Name'))]"
@@ -503,5 +503,6 @@
     }
   }
 }
+
 
 
