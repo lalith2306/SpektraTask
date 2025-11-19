@@ -1,3 +1,14 @@
+Param(
+    [string]$EnableCloudLabsEmbeddedShadow,
+    [string]$vmCustomImageOsState,
+    [string]$vmAdminUserName,
+    [string]$vmPasswordAdmin,
+    [string]$provisionNonAdminUser,
+    [string]$vmNonAdminUserName,
+    [string]$vmPasswordNonAdmin,
+    [string]$vmImageType
+)
+
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 
 # Define the desired DNS server
