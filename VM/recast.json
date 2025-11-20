@@ -273,6 +273,31 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2015-06-15",
+      "name": "[concat(parameters('vm1Name'), '/', 'win1cseExtension')]",
+      "location": "[variables('region')]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vm1Name'))]"
+      ],
+      "tags": {},
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.10",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[variables('customScriptExtensionURI')]",
+            "[variables('cloudlabsExtensionURI')]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2015-06-15",
       "name": "[concat(parameters('vm1Name'),'/', 'win1Extension')]",
       "location": "[variables('region')]",
       "dependsOn": [
@@ -293,31 +318,6 @@
         },
         "protectedSettings": {
           "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File dc.ps1"
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2015-06-15",
-      "name": "[concat(parameters('vm1Name'), '/', 'win1cseExtension')]",
-      "location": "[variables('region')]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vm1Name'))]"
-      ],
-      "tags": {},
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.10",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[variables('customScriptExtensionURI')]",
-            "[variables('cloudlabsExtensionURI')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
         }
       }
     },
@@ -368,6 +368,31 @@
       }
     },
     {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2015-06-15",
+      "name": "[concat(parameters('vm2Name'), '/', 'win2cseExtension')]",
+      "location": "[variables('region')]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vm2Name'))]"
+      ],
+      "tags": {},
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.10",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[variables('customScriptExtensionURI')]",
+            "[variables('cloudlabsExtensionURI')]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+        }
+      }
+    },
+    {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2015-06-15",
             "name": "[concat(parameters('vm2Name'),'/', 'win2Extension')]",
@@ -392,31 +417,6 @@
                     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File rms.ps1"
                 }
         }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2015-06-15",
-      "name": "[concat(parameters('vm2Name'), '/', 'win2cseExtension')]",
-      "location": "[variables('region')]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vm2Name'))]"
-      ],
-      "tags": {},
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.10",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[variables('customScriptExtensionURI')]",
-            "[variables('cloudlabsExtensionURI')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
-        }
-      }
     },
     {
       "name": "[variables('publicIpAddressNamevm2')]",
@@ -465,6 +465,31 @@
       }
     },
     {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2015-06-15",
+      "name": "[concat(parameters('vm3Name'), '/', 'win3cseExtension')]",
+      "location": "[variables('region')]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vm3Name'))]"
+      ],
+      "tags": {},
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.10",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[variables('customScriptExtensionURI')]",
+            "[variables('cloudlabsExtensionURI')]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+        }
+      }
+    },
+    {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2015-06-15",
             "name": "[concat(parameters('vm3Name'),'/', 'win3Extension')]",
@@ -489,31 +514,6 @@
                     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File windows.ps1"
                 }
         }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2015-06-15",
-      "name": "[concat(parameters('vm3Name'), '/', 'win3cseExtension')]",
-      "location": "[variables('region')]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vm3Name'))]"
-      ],
-      "tags": {},
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.10",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[variables('customScriptExtensionURI')]",
-            "[variables('cloudlabsExtensionURI')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/scripts/psscript.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
-        }
-      }
     },
     {
       "name": "[variables('publicIpAddressNamevm3')]",
