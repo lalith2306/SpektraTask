@@ -276,7 +276,7 @@
       "name": "[concat(parameters('vm1Name'),'/', 'win1Extension')]",
       "location": "[variables('region')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vm1Name'))]"
+        "[concat('Microsoft.Compute/virtualMachines/extensions/', parameters('vm1Name'), '/win1cseExtension')]"
       ],
       "tags": {
         "displayName": "VM1 Extension"
@@ -373,7 +373,7 @@
             "name": "[concat(parameters('vm2Name'),'/', 'win2Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vm2Name'))]"
+                "[concat('Microsoft.Compute/virtualMachines/extensions/', parameters('vm2Name'), '/win2cseExtension')]"
             ],
             "tags": {
                 "displayName": "VM2 Extension"
@@ -470,7 +470,7 @@
             "name": "[concat(parameters('vm3Name'),'/', 'win3Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vm3Name'))]"
+                "[concat('Microsoft.Compute/virtualMachines/extensions/', parameters('vm3Name'), '/win3cseExtension')]"
             ],
             "tags": {
                 "displayName": "VM3 Extension"
