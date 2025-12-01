@@ -1,7 +1,25 @@
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 
 # This script sets the DNS server to 10.0.0.8 for all active network adapters
- 
+
+$pssUrl = "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1"
+$functionsUrl = "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
+
+Invoke-WebRequest -Uri $pssUrl -OutFile "$env:TEMP\psscript.ps1" -UseBasicParsing
+Invoke-WebRequest -Uri $functionsUrl -OutFile "$env:TEMP\cloudlabs-windows-functions.ps1" -UseBasicParsing
+
+# Run psscript.ps1 with exact same parameters that ARM would pass
+powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
+    -trainerUserName "$env:TRAINERUSERNAME" `
+    -trainerUserPassword "$env:TRAINERUSERPASSWORD" `
+    -vmCustomImageOsState "$env:VMCUSTOMIMAGEOSSTATE" `
+    -vmAdminUserName "$env:VMADMINUSERNAME" `
+    -vmAdminPassword "$env:VMADMINPASSWORD" `
+    -provisionNonAdminUser "$env:PROVISIONNONADMINUSER" `
+    -vmNonAdminUserName "$env:VMNONADMINUSERNAME" `
+    -vmNonAdminPassword "$env:VMNONADMINPASSWORD" `
+    -vmImageType "$env:VMIMAGETYPE"
+
 # Define the desired DNS servers
 $dnsServers = @("10.0.0.8", "8.8.8.8")
  
@@ -70,4 +88,5 @@ Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -
     
 # After everything is done, stop transcript
 Stop-Transcript
+
 
