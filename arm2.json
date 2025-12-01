@@ -131,12 +131,11 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadow_common2.ps1",
-              "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/shadownew2.ps1"
+              "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/VM/dc.ps1"
             ]
           },
           "protectedSettings": {
-            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File shadownew2.ps1', variables('cloudlabsCommon'),variables('Enable-CloudLabsEmbeddedShadow'))]"
+            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File dc.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('vmAdminUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
           }
         }
       },
@@ -251,7 +250,3 @@
     }
 
   }
-
-
-
-
