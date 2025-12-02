@@ -1,5 +1,24 @@
 Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
 
+Param (
+    [Parameter(Mandatory = $true)]
+
+    [string]
+    $trainerUserName,
+
+    [string]
+    $trainerUserPassword,
+
+    [string]
+    $vmCustomImageOsState,
+    $vmAdminUserName,
+    $vmAdminPassword,
+    $provisionNonAdminUser,
+    $vmNonAdminUserName,
+    $vmNonAdminPassword,
+    $vmImageType
+)
+
 $pssUrl = "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1"
 $functionsUrl = "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
 
@@ -89,6 +108,7 @@ Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -
     
 # After everything is done, stop transcript
 Stop-Transcript
+
 
 
 
