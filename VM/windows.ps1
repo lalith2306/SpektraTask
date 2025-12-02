@@ -3,9 +3,7 @@ Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -
 Param (
     [Parameter(Mandatory = $true)]
     [string]$trainerUserName,
-
     [string]$trainerUserPassword,
-
     [string]$vmCustomImageOsState,
     [string]$vmAdminUserName,
     [string]$vmAdminPassword,
@@ -54,6 +52,7 @@ New-LocalUser -Name "RecastUser" -Password $password  -Description "New Administ
 Add-LocalGroupMember -Group "Administrators" -Member "RecastUser"
 
 Stop-Transcript
+
 
 
 
