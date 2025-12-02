@@ -32,6 +32,7 @@
     "Enable-CloudLabsEmbeddedShadow": "[concat(' -trainerUserName ', parameters('trainerUserName'), ' -trainerUserPassword ', parameters('trainerUserPassword'))]",
     "region": "[resourceGroup().location]",
     "vmPasswordNonAdmin": "[if(equals(parameters('useSamePasswordOrNot'), 'yes'), parameters('vmNonAdminPassword'), parameters('genNonAdminPassword'))]",
+    "vmPasswordAdmin": "[if(and(equals(parameters('useSamePasswordOrNot'), 'no'), equals(parameters('provisionNonAdminUser'), 'no')), parameters('genAdminPassword'), parameters('vmAdminPassword'))]",
     "vnetName": "[concat('vnet-', parameters('DeploymentID'))]",
     "subnetName": "subnet",
     "addressPrefix": "10.0.0.0/16",
@@ -494,4 +495,5 @@
     }
   }
 }
+
 
