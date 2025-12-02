@@ -268,7 +268,7 @@
     },
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2024-03-01",
             "name": "[concat(parameters('vm1Name'),'/', 'win1Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
@@ -280,7 +280,7 @@
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",
-                "typeHandlerVersion": "1.8",
+                "typeHandlerVersion": "1.10",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
@@ -340,7 +340,7 @@
     },
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2024-03-01",
             "name": "[concat(parameters('vm2Name'),'/', 'win2Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
@@ -352,7 +352,7 @@
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",
-                "typeHandlerVersion": "1.8",
+                "typeHandlerVersion": "1.10",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
@@ -412,7 +412,7 @@
     },
     {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2024-03-01",
             "name": "[concat(parameters('vm3Name'),'/', 'win3Extension')]",
             "location": "[variables('region')]",
             "dependsOn": [
@@ -424,7 +424,7 @@
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",
-                "typeHandlerVersion": "1.8",
+                "typeHandlerVersion": "1.10",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
@@ -495,5 +495,3 @@
     }
   }
 }
-
-
