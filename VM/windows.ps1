@@ -2,21 +2,17 @@ Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -
 
 Param (
     [Parameter(Mandatory = $true)]
+    [string]$trainerUserName,
 
-    [string]
-    $trainerUserName,
+    [string]$trainerUserPassword,
 
-    [string]
-    $trainerUserPassword,
-
-    [string]
-    $vmCustomImageOsState,
-    $vmAdminUserName,
-    $vmAdminPassword,
-    $provisionNonAdminUser,
-    $vmNonAdminUserName,
-    $vmNonAdminPassword,
-    $vmImageType
+    [string]$vmCustomImageOsState,
+    [string]$vmAdminUserName,
+    [string]$vmAdminPassword,
+    [string]$provisionNonAdminUser,
+    [string]$vmNonAdminUserName,
+    [string]$vmNonAdminPassword,
+    [string]$vmImageType
 )
 
 $pssUrl = "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1"
@@ -58,5 +54,6 @@ New-LocalUser -Name "RecastUser" -Password $password  -Description "New Administ
 Add-LocalGroupMember -Group "Administrators" -Member "RecastUser"
 
 Stop-Transcript
+
 
 
