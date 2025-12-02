@@ -9,17 +9,17 @@ Invoke-WebRequest -Uri $functionsUrl -OutFile "$env:TEMP\cloudlabs-windows-funct
 # Load the functions file first
 . "$env:TEMP\cloudlabs-windows-functions.ps1"
 
-# Run psscript.ps1 with exact same parameters that ARM would pass
+# Now run psscript.ps1 with correct env var names (case-sensitive!)
 powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
-    -trainerUserName "$env:TRAINERUSERNAME" `
-    -trainerUserPassword "$env:TRAINERUSERPASSWORD" `
-    -vmCustomImageOsState "$env:VMCUSTOMIMAGEOSSTATE" `
-    -vmAdminUserName "$env:VMADMINUSERNAME" `
-    -vmAdminPassword "$env:VMADMINPASSWORD" `
-    -provisionNonAdminUser "$env:PROVISIONNONADMINUSER" `
-    -vmNonAdminUserName "$env:VMNONADMINUSERNAME" `
-    -vmNonAdminPassword "$env:VMNONADMINPASSWORD" `
-    -vmImageType "$env:VMIMAGETYPE"
+    -trainerUserName "$env:trainerUserName" `
+    -trainerUserPassword "$env:trainerUserPassword" `
+    -vmCustomImageOsState "$env:vmCustomImageOsState" `
+    -vmAdminUserName "$env:vmAdminUserName" `
+    -vmAdminPassword "$env:vmAdminPassword" `
+    -provisionNonAdminUser "$env:provisionNonAdminUser" `
+    -vmNonAdminUserName "$env:vmNonAdminUserName" `
+    -vmNonAdminPassword "$env:vmNonAdminPassword" `
+    -vmImageType "$env:vmImageType"
 
 # Define the desired DNS servers
 $dnsServers = @("10.0.0.8", "8.8.8.8")
@@ -89,6 +89,7 @@ Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -
     
 # After everything is done, stop transcript
 Stop-Transcript
+
 
 
 
