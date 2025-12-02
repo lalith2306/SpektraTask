@@ -3,9 +3,7 @@ Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -
 Param (
     [Parameter(Mandatory = $true)]
     [string]$trainerUserName,
-
     [string]$trainerUserPassword,
-
     [string]$vmCustomImageOsState,
     [string]$vmAdminUserName,
     [string]$vmAdminPassword,
@@ -104,6 +102,7 @@ Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -
     
 # After everything is done, stop transcript
 Stop-Transcript
+
 
 
 
