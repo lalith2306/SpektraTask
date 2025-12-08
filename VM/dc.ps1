@@ -1,7 +1,9 @@
-$myContent = Get-Content -Raw -Encoding UTF8 $MyInvocation.PSCommandPath
-if ($myContent.StartsWith([char]65279)) {
-    $clean = $myContent.TrimStart([char]65279)
-    Set-Content -Encoding UTF8 -Path $MyInvocation.PSCommandPath -Value $clean
+if ($false) {
+    $myContent = Get-Content -Raw -Encoding UTF8 $MyInvocation.PSCommandPath
+    if ($myContent.StartsWith([char]65279)) {
+        $clean = $myContent.TrimStart([char]65279)
+        Set-Content -Encoding UTF8 -Path $MyInvocation.PSCommandPath -Value $clean
+    }
 }
 
 Param (
@@ -108,6 +110,7 @@ Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -
     
 # After everything is done, stop transcript
 Stop-Transcript
+
 
 
 
