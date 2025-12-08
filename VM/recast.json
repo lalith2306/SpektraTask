@@ -500,5 +500,6 @@
     "Trainer Password": {
       "type": "string",
       "value": "[parameters('trainerUserPassword')]"
+    }
   }
 }
