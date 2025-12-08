@@ -30,18 +30,6 @@ Invoke-WebRequest -Uri $functionsUrl -OutFile "$env:TEMP\cloudlabs-windows-funct
 # Load the functions file first
 . "$env:TEMP\cloudlabs-windows-functions.ps1"
 
-# Now run psscript.ps1 with correct env var names (case-sensitive!)
-powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
-    -trainerUserName "$env:trainerUserName" `
-    -trainerUserPassword "$env:trainerUserPassword" `
-    -vmCustomImageOsState "$env:vmCustomImageOsState" `
-    -vmAdminUserName "$env:vmAdminUserName" `
-    -vmAdminPassword "$env:vmAdminPassword" `
-    -provisionNonAdminUser "$env:provisionNonAdminUser" `
-    -vmNonAdminUserName "$env:vmNonAdminUserName" `
-    -vmNonAdminPassword "$env:vmNonAdminPassword" `
-    -vmImageType "$env:vmImageType"
-
 # Define the desired DNS servers
 $dnsServers = @("10.0.0.8", "8.8.8.8")
  
@@ -107,17 +95,18 @@ $trigger = New-ScheduledTaskTrigger -Once -At $getTime
 $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 # Register the task
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName $taskName2
-    
+
+# Now run psscript.ps1 with correct env var names (case-sensitive!)
+powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
+    -trainerUserName "$env:trainerUserName" `
+    -trainerUserPassword "$env:trainerUserPassword" `
+    -vmCustomImageOsState "$env:vmCustomImageOsState" `
+    -vmAdminUserName "$env:vmAdminUserName" `
+    -vmAdminPassword "$env:vmAdminPassword" `
+    -provisionNonAdminUser "$env:provisionNonAdminUser" `
+    -vmNonAdminUserName "$env:vmNonAdminUserName" `
+    -vmNonAdminPassword "$env:vmNonAdminPassword" `
+    -vmImageType "$env:vmImageType"
+
 # After everything is done, stop transcript
 Stop-Transcript
-
-
-
-
-
-
-
-
-
-
-
