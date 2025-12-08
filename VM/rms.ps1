@@ -11,7 +11,11 @@ Param (
     [string]$vmImageType
 )
 
-Start-Transcript -Path C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt -Append
+function Start-Logging {
+    Start-Transcript -Path "C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt" -Append
+}
+
+Start-Logging
 
 $pssUrl = "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1"
 $functionsUrl = "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
@@ -52,6 +56,7 @@ New-LocalUser -Name "RecastAdmin" -Password $password  -Description "New Adminis
 Add-LocalGroupMember -Group "Administrators" -Member "RecastAdmin"
 
 Stop-Transcript
+
 
 
 
