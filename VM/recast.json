@@ -492,6 +492,13 @@
     "DC Admin Password": {
       "type": "string",
       "value": "RecastSoftware94!!"
-    }
+    },
+    "Trainer Username": {
+      "type": "string",
+      "value": "[parameters('trainerUserName')]"
+    },
+    "Trainer Password": {
+      "type": "string",
+      "value": "[parameters('trainerUserPassword')]"
   }
 }
