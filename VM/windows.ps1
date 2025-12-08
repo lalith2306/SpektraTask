@@ -26,18 +26,6 @@ $functionsUrl = "https://experienceazure.blob.core.windows.net/templates/cloudla
 
 Invoke-WebRequest -Uri $pssUrl -OutFile "$env:TEMP\psscript.ps1" -UseBasicParsing
 Invoke-WebRequest -Uri $functionsUrl -OutFile "$env:TEMP\cloudlabs-windows-functions.ps1" -UseBasicParsing
-
-# Run psscript.ps1 with exact same parameters that ARM would pass
-powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
-    -trainerUserName "$env:TRAINERUSERNAME" `
-    -trainerUserPassword "$env:TRAINERUSERPASSWORD" `
-    -vmCustomImageOsState "$env:VMCUSTOMIMAGEOSSTATE" `
-    -vmAdminUserName "$env:VMADMINUSERNAME" `
-    -vmAdminPassword "$env:VMADMINPASSWORD" `
-    -provisionNonAdminUser "$env:PROVISIONNONADMINUSER" `
-    -vmNonAdminUserName "$env:VMNONADMINUSERNAME" `
-    -vmNonAdminPassword "$env:VMNONADMINPASSWORD" `
-    -vmImageType "$env:VMIMAGETYPE"
     
 # Define the desired DNS server
 $dnsServer = "10.0.0.8"
@@ -59,11 +47,16 @@ $password = ConvertTo-SecureString "RecastSoftware25!!" -AsPlainText -Force
 New-LocalUser -Name "RecastUser" -Password $password  -Description "New Administrator Account" -AccountNeverExpires -UserMayNotChangePassword -PasswordNeverExpires
 Add-LocalGroupMember -Group "Administrators" -Member "RecastUser"
 
+# Run psscript.ps1 with exact same parameters that ARM would pass
+powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
+    -trainerUserName "$env:TRAINERUSERNAME" `
+    -trainerUserPassword "$env:TRAINERUSERPASSWORD" `
+    -vmCustomImageOsState "$env:VMCUSTOMIMAGEOSSTATE" `
+    -vmAdminUserName "$env:VMADMINUSERNAME" `
+    -vmAdminPassword "$env:VMADMINPASSWORD" `
+    -provisionNonAdminUser "$env:PROVISIONNONADMINUSER" `
+    -vmNonAdminUserName "$env:VMNONADMINUSERNAME" `
+    -vmNonAdminPassword "$env:VMNONADMINPASSWORD" `
+    -vmImageType "$env:VMIMAGETYPE"
+
 Stop-Transcript
-
-
-
-
-
-
-
