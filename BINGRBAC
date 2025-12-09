@@ -1,0 +1,13 @@
+{
+  "Name": "Spektra Custom RBAC",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Spektra Training Custom Role.",
+  "Actions": [
+    "Microsoft.Bing/accounts/listKeys/action",
+    "Microsoft.CognitiveServices/accounts/read",
+    "Microsoft.Web/Connections/Read",
+    "Microsoft.Web/Connections/ListConnectionKeys/action"
+  ],
+  "NotActions": []
+}
