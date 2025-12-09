@@ -1,0 +1,32 @@
+{
+    "id": "/subscriptions/5052b705-c4f3-4471-9d66-1f385d3b8fc6/providers/Microsoft.Authorization/roleDefinitions/030bcc14-480d-45cc-8874-5a717ae0782c",
+    "properties": {
+        "roleName": "Spektra Custom RBAC I54522 S1 UQtPp",
+        "description": "Spektra Training Custom Role.",
+        "assignableScopes": [
+            "/subscriptions/5052b705-c4f3-4471-9d66-1f385d3b8fc6"
+        ],
+        "permissions": [
+            {
+                "actions": [
+                    "microsoft.alertsmanagement/smartDetectorAlertRules/*",
+                    "Microsoft.Authorization/*/read",
+                    "Microsoft.CognitiveServices/accounts/*",
+                    "microsoft.insights/actiongroups/*",
+                    "Microsoft.Insights/components/*",
+                    "Microsoft.KeyVault/vaults/*",
+                    "Microsoft.MachineLearningServices/workspaces/*",
+                    "Microsoft.OperationalInsights/workspaces/*",
+                    "Microsoft.Resources/deployments/*",
+                    "Microsoft.Resources/subscriptions/resourceGroups/read",
+                    "Microsoft.Search/searchServices/*",
+                    "Microsoft.Storage/storageAccounts/*",
+                    "Microsoft.Authorization/roleAssignments/write"
+                ],
+                "notActions": [],
+                "dataActions": [],
+                "notDataActions": []
+            }
+        ]
+    }
+} 
