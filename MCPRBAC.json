@@ -1,5 +1,5 @@
 {
-  "Name": "Spektra Custom RBAC",
+  "Name": "Spektra Custom RBAC NEW",
   "Id": null,
   "IsCustom": true,
   "Description": "Spektra Training Custom Role.",
@@ -20,3 +20,4 @@
   ],
   "NotActions": []
 }
+
