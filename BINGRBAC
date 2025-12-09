@@ -6,8 +6,7 @@
   "Actions": [
     "Microsoft.Bing/accounts/listKeys/action",
     "Microsoft.CognitiveServices/accounts/read",
-    "Microsoft.Web/Connections/Read",
-    "Microsoft.Web/Connections/ListConnectionKeys/action"
+    "Microsoft.CognitiveServices/accounts/listKeys/action"
   ],
   "NotActions": []
 }
