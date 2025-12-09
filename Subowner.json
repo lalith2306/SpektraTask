@@ -1,0 +1,15 @@
+{
+  "Name": "Spektra Custom Owner RBAC",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Spektra Training Custom Role.",
+  "Actions": [
+    "Microsoft.Resources/deployments/*",
+    "Microsoft.Storage/*",
+    "Microsoft.Web/*",
+    "Microsoft.Compute/*",
+    "Microsoft.Network/*",
+    "Microsoft.KeyVault/*"   
+  ],
+  "NotActions": []
+}
