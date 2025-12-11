@@ -110,4 +110,3 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
 
 # After everything is done, stop transcript
 Stop-Transcript
-
