@@ -47,6 +47,11 @@ $password = ConvertTo-SecureString "RecastSoftware25!!" -AsPlainText -Force
 New-LocalUser -Name "RecastUser" -Password $password  -Description "New Administrator Account" -AccountNeverExpires -UserMayNotChangePassword -PasswordNeverExpires
 Add-LocalGroupMember -Group "Administrators" -Member "RecastUser"
 
+if (Get-LocalUser -Name "trainer" -ErrorAction SilentlyContinue) {
+    Write-Host "Existing trainer user found. Removing it before recreating..." -ForegroundColor Yellow
+    Remove-LocalUser -Name "trainer" -Force
+}
+
 # Load the functions file first
 . "$env:TEMP\cloudlabs-windows-functions.ps1"
 
@@ -63,3 +68,4 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
     -vmImageType "$env:VMIMAGETYPE"
 
 Stop-Transcript
+
