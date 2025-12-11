@@ -27,9 +27,6 @@ $functionsUrl = "https://experienceazure.blob.core.windows.net/templates/cloudla
 Invoke-WebRequest -Uri $pssUrl -OutFile "$env:TEMP\psscript.ps1" -UseBasicParsing
 Invoke-WebRequest -Uri $functionsUrl -OutFile "$env:TEMP\cloudlabs-windows-functions.ps1" -UseBasicParsing
 
-# Load the functions file first
-. "$env:TEMP\cloudlabs-windows-functions.ps1"
-
 # Define the desired DNS servers
 $dnsServers = @("10.0.0.8", "8.8.8.8")
  
@@ -96,6 +93,9 @@ $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccou
 # Register the task
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName $taskName2
 
+# Load the functions file first
+. "$env:TEMP\cloudlabs-windows-functions.ps1"
+
 # Now run psscript.ps1 with correct env var names (case-sensitive!)
 powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
     -trainerUserName "$env:trainerUserName" `
@@ -110,3 +110,4 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
 
 # After everything is done, stop transcript
 Stop-Transcript
+
