@@ -47,6 +47,9 @@ $password = ConvertTo-SecureString "RecastSoftware94!!" -AsPlainText -Force
 New-LocalUser -Name "RecastAdmin" -Password $password  -Description "New Administrator Account" -AccountNeverExpires -UserMayNotChangePassword -PasswordNeverExpires
 Add-LocalGroupMember -Group "Administrators" -Member "RecastAdmin"
 
+# Load the functions file first
+. "$env:TEMP\cloudlabs-windows-functions.ps1"
+
 # Run psscript.ps1 with exact same parameters that ARM would pass
 powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
     -trainerUserName "$env:TRAINERUSERNAME" `
@@ -60,3 +63,4 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
     -vmImageType "$env:VMIMAGETYPE"
 
 Stop-Transcript
+
