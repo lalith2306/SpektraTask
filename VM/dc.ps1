@@ -93,6 +93,11 @@ $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccou
 # Register the task
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName $taskName2
 
+if (Get-LocalUser -Name "trainer" -ErrorAction SilentlyContinue) {
+    Write-Host "Existing trainer user found. Removing it before recreating..." -ForegroundColor Yellow
+    Remove-LocalUser -Name "trainer" -Force
+}
+
 # Load the functions file first
 . "$env:TEMP\cloudlabs-windows-functions.ps1"
 
@@ -110,3 +115,4 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
 
 # After everything is done, stop transcript
 Stop-Transcript
+
