@@ -85,38 +85,20 @@ $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccou
 # Register the task
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName $taskName2
 
-# CHECK IF TRAINER USER ALREADY EXISTS IN CUSTOM IMAGE
-$trainer = Get-LocalUser -Name "trainer" -ErrorAction SilentlyContinue
-
-if ($trainer) {
-    Write-Host "Existing trainer user found in custom image. Removing it..."
-
-    # Remove shadow task if exists
-    if (Get-ScheduledTask -TaskName "shadowshortcut" -ErrorAction SilentlyContinue) {
-        Unregister-ScheduledTask -TaskName "shadowshortcut" -Confirm:$false
-    }
-
-    # Remove old trainer user
-    Remove-LocalUser -Name "trainer"
-}
-else {
-    Write-Host "Trainer user not found, continuing..."
-}
-
 # Load the functions file first
 . "$env:TEMP\cloudlabs-windows-functions.ps1"
 
 # Now run psscript.ps1 with correct env var names (case-sensitive!)
 powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
-    -trainerUserName "$env:trainerUserName" `
-    -trainerUserPassword "$env:trainerUserPassword" `
-    -vmCustomImageOsState "$env:vmCustomImageOsState" `
-    -vmAdminUserName "$env:vmAdminUserName" `
-    -vmAdminPassword "$env:vmAdminPassword" `
-    -provisionNonAdminUser "$env:provisionNonAdminUser" `
-    -vmNonAdminUserName "$env:vmNonAdminUserName" `
-    -vmNonAdminPassword "$env:vmNonAdminPassword" `
-    -vmImageType "$env:vmImageType"
+    -trainerUserName "$trainerUserName" `
+    -trainerUserPassword "$trainerUserPassword" `
+    -vmCustomImageOsState "$vmCustomImageOsState" `
+    -vmAdminUserName "$vmAdminUserName" `
+    -vmAdminPassword "$vmAdminPassword" `
+    -provisionNonAdminUser "$provisionNonAdminUser" `
+    -vmNonAdminUserName "$vmNonAdminUserName" `
+    -vmNonAdminPassword "$vmNonAdminPassword" `
+    -vmImageType "$vmImageType"
 
 # After everything is done, stop transcript
 Stop-Transcript
