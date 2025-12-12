@@ -1,9 +1,9 @@
 Param (
     [Parameter(Mandatory = $true)]
-    [string]$RMSVMUserName,
+    [string]$trainerUserName,
     [string]$trainerUserPassword,
     [string]$vmCustomImageOsState,
-    [string]$vmAdminUserName,
+    [string]$RMSVMUserName,
     [string]$vmAdminPassword,
     [string]$provisionNonAdminUser,
     [string]$vmNonAdminUserName,
@@ -53,5 +53,6 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
     -vmNonAdminUserName $vmNonAdminUserName `
     -vmNonAdminPassword $vmNonAdminPassword `
     -vmImageType $vmImageType
+
 
 Stop-Transcript
