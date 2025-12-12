@@ -1,10 +1,4 @@
-if ($false) {
-    $myContent = Get-Content -Raw -Encoding UTF8 $MyInvocation.PSCommandPath
-    if ($myContent.StartsWith([char]65279)) {
-        $clean = $myContent.TrimStart([char]65279)
-        Set-Content -Encoding UTF8 -Path $MyInvocation.PSCommandPath -Value $clean
-    }
-}
+Start-Transcript -Path "C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt" -Append
 
 Param (
     [Parameter(Mandatory = $true)]
@@ -18,8 +12,6 @@ Param (
     [string]$vmNonAdminPassword,
     [string]$vmImageType
 )
-
-Start-Transcript -Path "C:\WindowsAzure\Logs\CloudLabsCustomScriptExtension.txt" -Append
 
 $pssUrl = "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/scripts/psscript.ps1"
 $functionsUrl = "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1"
@@ -52,11 +44,11 @@ if (Get-LocalUser -Name "trainer" -ErrorAction SilentlyContinue) {
     Remove-LocalUser -Name "trainer" -Force
 }
 
-# CHECK IF TRAINER USER ALREADY EXISTS
-$trainer = Get-LocalUser -Name $trainerUserName -ErrorAction SilentlyContinue
+# CHECK IF TRAINER USER ALREADY EXISTS IN CUSTOM IMAGE
+$trainer = Get-LocalUser -Name "trainer" -ErrorAction SilentlyContinue
 
 if ($trainer) {
-    Write-Host "Existing trainer user found. Removing it before recreating..."
+    Write-Host "Existing trainer user found in custom image. Removing it..."
 
     # Remove shadow task if exists
     if (Get-ScheduledTask -TaskName "shadowshortcut" -ErrorAction SilentlyContinue) {
@@ -64,21 +56,11 @@ if ($trainer) {
     }
 
     # Remove old trainer user
-    Remove-LocalUser -Name $trainerUserName
+    Remove-LocalUser -Name "trainer"
 }
-
-# RECREATE TRAINER USER WITH PARAMETER PASSWORD
-$securePass = ConvertTo-SecureString $trainerUserPassword -AsPlainText -Force
-
-New-LocalUser -Name $trainerUserName `
-              -Password $securePass `
-              -FullName $trainerUserName `
-              -Description "CloudLabs EmbeddedShadow User" `
-              -AccountNeverExpires
-
-# ADD TRAINER TO ADMIN + RDP GROUPS
-Add-LocalGroupMember -Group "Administrators" -Member $trainerUserName
-Add-LocalGroupMember -Group "Remote Desktop Users" -Member $trainerUserName
+else {
+    Write-Host "Trainer user not found, continuing..."
+}
 
 # Load the functions file first
 . "$env:TEMP\cloudlabs-windows-functions.ps1"
@@ -96,5 +78,3 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
     -vmImageType "$env:VMIMAGETYPE"
 
 Stop-Transcript
-
-
