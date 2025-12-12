@@ -39,42 +39,19 @@ $password = ConvertTo-SecureString "RecastSoftware25!!" -AsPlainText -Force
 New-LocalUser -Name "RecastUser" -Password $password  -Description "New Administrator Account" -AccountNeverExpires -UserMayNotChangePassword -PasswordNeverExpires
 Add-LocalGroupMember -Group "Administrators" -Member "RecastUser"
 
-if (Get-LocalUser -Name "trainer" -ErrorAction SilentlyContinue) {
-    Write-Host "Existing trainer user found. Removing it before recreating..." -ForegroundColor Yellow
-    Remove-LocalUser -Name "trainer" -Force
-}
-
-# CHECK IF TRAINER USER ALREADY EXISTS IN CUSTOM IMAGE
-$trainer = Get-LocalUser -Name "trainer" -ErrorAction SilentlyContinue
-
-if ($trainer) {
-    Write-Host "Existing trainer user found in custom image. Removing it..."
-
-    # Remove shadow task if exists
-    if (Get-ScheduledTask -TaskName "shadowshortcut" -ErrorAction SilentlyContinue) {
-        Unregister-ScheduledTask -TaskName "shadowshortcut" -Confirm:$false
-    }
-
-    # Remove old trainer user
-    Remove-LocalUser -Name "trainer"
-}
-else {
-    Write-Host "Trainer user not found, continuing..."
-}
-
 # Load the functions file first
 . "$env:TEMP\cloudlabs-windows-functions.ps1"
 
 # Run psscript.ps1 with exact same parameters that ARM would pass
 powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
-    -trainerUserName "$env:TRAINERUSERNAME" `
-    -trainerUserPassword "$env:TRAINERUSERPASSWORD" `
-    -vmCustomImageOsState "$env:VMCUSTOMIMAGEOSSTATE" `
-    -vmAdminUserName "$env:VMADMINUSERNAME" `
-    -vmAdminPassword "$env:VMADMINPASSWORD" `
-    -provisionNonAdminUser "$env:PROVISIONNONADMINUSER" `
-    -vmNonAdminUserName "$env:VMNONADMINUSERNAME" `
-    -vmNonAdminPassword "$env:VMNONADMINPASSWORD" `
-    -vmImageType "$env:VMIMAGETYPE"
+    -trainerUserName $trainerUserName `
+    -trainerUserPassword $trainerUserPassword `
+    -vmCustomImageOsState $vmCustomImageOsState `
+    -vmAdminUserName $vmAdminUserName `
+    -vmAdminPassword $vmAdminPassword `
+    -provisionNonAdminUser $provisionNonAdminUser `
+    -vmNonAdminUserName $vmNonAdminUserName `
+    -vmNonAdminPassword $vmNonAdminPassword `
+    -vmImageType $vmImageType
 
 Stop-Transcript
