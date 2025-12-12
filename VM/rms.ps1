@@ -78,7 +78,3 @@ powershell -ExecutionPolicy Unrestricted -File "$env:TEMP\psscript.ps1" `
     -vmImageType "$env:VMIMAGETYPE"
 
 Stop-Transcript
-
-
-
-
