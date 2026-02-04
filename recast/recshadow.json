@@ -52,7 +52,7 @@
     "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]"
     "customscriptDCvm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/dc.ps1",
     "customscriptRMSvm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/rms.ps1",
-    "customscriptWin11vm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1%22
+    "customscriptWin11vm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1"
   },
   "resources": [
  
@@ -501,4 +501,5 @@
   }
 
 }
+
 
