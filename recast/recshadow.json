@@ -50,6 +50,9 @@
     "publicIpAddressDNSNamevm2": "[toLower(concat(parameters('vm2Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
     "publicIpAddressNamevm3": "[concat(parameters('vm3Name'), '-pip')]",
     "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]"
+    "customscriptDCvm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/dc.ps1",
+    "customscriptRMSvm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/rms.ps1",
+    "customscriptWin11vm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1%22
   },
   "resources": [
  
@@ -498,3 +501,4 @@
   }
 
 }
+
