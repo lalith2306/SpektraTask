@@ -2,33 +2,60 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "DeploymentID": { "type": "string" },
-    "virtualMachine1Size":{"type": "string"},
-    "virtualMachine2Size":{"type": "string"},
-    "virtualMachine3Size":{"type": "string"},
-    "vm1Name":{"type": "string"},
-    "vm2Name":{"type": "string"},
-    "vm3Name":{"type": "string"},
-    "vm1ImageId":{"type": "string"},
-    "vm2ImageId":{"type": "string"},
-    "vm3ImageId":{"type": "string"},
-    "vm1PrivateIP":{"type": "string"},
-    "vm2PrivateIP":{"type": "string"},
-    "vm3PrivateIP":{"type": "string"},
-    "vmCustomImageOsState" :{"type": "string"},
-    "DCVMUserName":{"type": "string"},
-    "RMSVMUserName":{"type": "string"},
-    "Win11VMUserName":{"type": "string"},
-    "vmAdminPassword":{"type": "string"},
-    "provisionNonAdminUser":{"type": "string"},
-    "vmNonAdminUserName":{"type": "string"},
-    "vmImageType":{"type": "string"},
-    "useSamePasswordOrNot":{"type": "string"},
-    "vmNonAdminPassword":{"type": "string"},
-    "genNonAdminPassword":{"type": "string"},
-    "genAdminPassword":{"type": "string"},
-    "trainerUserName":{"type": "string"},
-    "trainerUserPassword":{"type": "string"}
+    "DeploymentID": { 
+        "type": "string" },
+    "virtualMachine1Size":{
+        "type": "string"},
+    "virtualMachine2Size":{
+        "type": "string"},
+    "virtualMachine3Size":{
+        "type": "string"},
+    "vm1Name":{
+        "type": "string"},
+    "vm2Name":{
+        "type": "string"},
+    "vm3Name":{
+        "type": "string"},
+    "vm1ImageId":{
+        "type": "string"},
+    "vm2ImageId":{
+        "type": "string"},
+    "vm3ImageId":{
+        "type": "string"},
+    "vm1PrivateIP":{
+        "type": "string"},
+    "vm2PrivateIP":{
+        "type": "string"},
+    "vm3PrivateIP":{
+        "type": "string"},
+    "vmCustomImageOsState" :{
+        "type": "string"},
+    "DCVMUserName":{
+        "type": "string"},
+    "RMSVMUserName":{
+        "type": "string"},
+    "Win11VMUserName":{
+        "type": "string"},
+    "vmAdminPassword":{
+        "type": "string"},
+    "provisionNonAdminUser":{
+        "type": "string"},
+    "vmNonAdminUserName":{
+        "type": "string"},
+    "vmImageType":{
+        "type": "string"},
+    "useSamePasswordOrNot":{
+        "type": "string"},
+    "vmNonAdminPassword":{
+        "type": "string"},
+    "genNonAdminPassword":{
+        "type": "string"},
+    "genAdminPassword":{
+        "type": "string"},
+    "trainerUserName":{
+        "type": "string"},
+    "trainerUserPassword":{
+        "type": "string"}
   },
   "variables": {
     "Enable-CloudLabsEmbeddedShadow": "[concat(' -trainerUserName ', parameters('trainerUserName'), ' -trainerUserPassword ', parameters('trainerUserPassword'))]",
@@ -49,13 +76,13 @@
     "publicIpAddressNamevm2": "[concat(parameters('vm2Name'), '-pip')]",
     "publicIpAddressDNSNamevm2": "[toLower(concat(parameters('vm2Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
     "publicIpAddressNamevm3": "[concat(parameters('vm3Name'), '-pip')]",
-    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]"
-    "customscriptDCvm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/dc.ps1",
-    "customscriptRMSvm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/rms.ps1",
-    "customscriptWin11vm": "https://experienceazure.blob.core.windows.net/vmaas/s/arm-templates/RecastMultiVM/Scripts/windows.ps1"
+    "publicIpAddressDNSNamevm3": "[toLower(concat(parameters('vm3Name'), parameters('DeploymentID'), uniqueString(resourceGroup().id)))]",
+    "customscriptDCvm": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/recast/dc.ps1",
+    "customscriptRMSvm": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/recast/rms.ps1",
+    "customscriptWin11vm": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/recast/windows.ps1"
   },
+
   "resources": [
- 
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2022-11-01",
@@ -291,7 +318,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/RecastMultiVM/Scripts/dc.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('DCVMUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File dc.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('DCVMUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -360,7 +387,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/RecastMultiVM/Scripts/rms.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('RMSVMUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File rms.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('RMSVMUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -429,7 +456,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File s/arm-templates/RecastMultiVM/Scripts/windows.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('Win11VMUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
+                    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File windows.ps1 ', variables('Enable-CloudLabsEmbeddedShadow'), ' ', parameters('vmCustomImageOsState'), ' ', parameters('Win11VMUserName'), ' ', variables('vmPasswordAdmin'), ' ', parameters('provisionNonAdminUser'), ' ', parameters('vmNonAdminUserName'), ' ', variables('vmPasswordNonAdmin'), ' ', parameters('vmImageType'))]"
                 }
         }
     },
@@ -499,8 +526,4 @@
       "value": "[parameters('trainerUserPassword')]"
     }
   }
-
 }
-
-
-
