@@ -23,12 +23,6 @@
     "vm3Name": {
       "type": "string"
     },
-    "DCVMUserName":{
-        "type": "string"},
-    "RMSVMUserName":{
-        "type": "string"},
-    "Win11VMUserName":{
-        "type": "string"},
     "vm1ImageId": {
       "type": "string"
     },
@@ -50,8 +44,14 @@
     "vmCustomImageOsState": {
       "type": "string"
     },
-    "vmAdminUserName": {
-      "type": "string"
+        "DCVMUserName":{
+        "type": "string"
+    },
+    "RMSVMUserName":{
+        "type": "string"
+    },
+    "Win11VMUserName":{
+        "type": "string"
     },
     "vmAdminPassword": {
       "type": "string"
