@@ -1,23 +1,23 @@
 {
-  "Name": "Spektra Custom RBAC NEW",
-  "Id": null,
-  "IsCustom": true,
-  "Description": "Spektra Training Custom Role.",
+  "Name": "Cost Management Reader",
+  "IsCustom": false,
+  "Description": "Can view cost data and configuration (e.g. budgets, exports)",
   "Actions": [
-    "microsoft.alertsmanagement/smartDetectorAlertRules/*",
-    "Microsoft.Authorization/*/read",
-    "Microsoft.CognitiveServices/accounts/*",
-    "microsoft.insights/actiongroups/*",
-    "Microsoft.Insights/components/*",
-    "Microsoft.KeyVault/vaults/*",
-    "Microsoft.MachineLearningServices/workspaces/*",
-    "Microsoft.OperationalInsights/workspaces/*",
-    "Microsoft.Resources/deployments/*",
+    "Microsoft.Consumption/*/read",
+    "Microsoft.CostManagement/*/read",
+    "Microsoft.Billing/billingPeriods/read",
+    "Microsoft.Resources/subscriptions/read",
     "Microsoft.Resources/subscriptions/resourceGroups/read",
-    "Microsoft.Search/searchServices/*",
-    "Microsoft.Storage/storageAccounts/*",
-    "Microsoft.Authorization/roleAssignments/write"
+    "Microsoft.Support/*",
+    "Microsoft.Advisor/configurations/read",
+    "Microsoft.Advisor/recommendations/read",
+    "Microsoft.Management/managementGroups/read",
+    "Microsoft.Billing/billingProperty/read"
   ],
-  "NotActions": []
+  "NotActions": [],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/"
+  ]
 }
-
