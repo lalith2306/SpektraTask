@@ -1,15 +1,17 @@
 {
-  "Name": "Spektra Custom Owner RBAC",
-  "Id": null,
+  "Name": "Cost-Only-Reader-Locked",
   "IsCustom": true,
-  "Description": "Spektra Training Custom Role.",
+  "Description": "Provides ONLY cost and consumption read access. Blocks all resource groups, resources, Azure AD, subscription info, policies, VMs, storage, networking, and all other Azure service blades.",
   "Actions": [
-    "Microsoft.Resources/deployments/*",
-    "Microsoft.Storage/*",
-    "Microsoft.Web/*",
-    "Microsoft.Compute/*",
-    "Microsoft.Network/*",
-    "Microsoft.KeyVault/*"   
+    "Microsoft.CostManagement/*/read",
+    "Microsoft.Consumption/*/read"
   ],
-  "NotActions": []
+  "NotActions": [
+    "*"
+  ],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "[subscription().id]"
+  ]
 }
