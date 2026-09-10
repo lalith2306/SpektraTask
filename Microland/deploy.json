@@ -1,0 +1,190 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Lab (Cisco VLAN Switching - CML) - single VM deployed from a SPECIALIZED Compute Gallery image so the environment comes up already-configured: a Windows Server host VM with Hyper-V, the NAT virtual switch, and the Cisco Modeling Labs (CML) nested VM already installed, network-configured and licensed (parameters('cmlImageId')). Because the image is SPECIALIZED, the VM boots with its existing local accounts, computer name, Hyper-V configuration and nested CML VM intact - there is NO osProfile and NO customData, since either would try to reprovision/rename the machine and could disturb the baked-in Hyper-V/CML state. The candidate RDPs to the VM, opens the CML web UI at https://192.168.100.10 from inside that session, and performs the VLAN configuration task on the IOL L2 switch node.",
+    "comments": "ENVIRONMENT BRING-UP: The VM uses a SPECIALIZED image captured from a working, hand-configured environment (Hyper-V nested virtualization enabled, NATSwitch + NAT configured, CML installed/licensed/images imported, VLAN-LAB topology built). NO first-time configuration runs at deploy time. Nested virtualization must be supported by the chosen vmSize (Dsv4/Dv3/Ev3 family or later) or the CML nested VM will fail to start with a 'virtualization disabled' error identical to what was seen during initial setup. PREREQUISITES: the deploying identity needs Reader on the gallery 'Cisco_image' (RG cloudlabs-mgmt-images), or the image shared to the target subscription."
+  },
+  "parameters": {
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "azureuser"
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "defaultValue": "Mypassword!123"
+    },
+    "DeploymentID": {
+      "type": "string"
+    },
+    "cmlImageId": {
+      "type": "string",
+      "defaultValue": "/subscriptions/f9d94d2c-5796-4609-94e2-2684e2f14210/resourceGroups/cloudlabs-mgmt-images/providers/Microsoft.Compute/galleries/Cisco_image_migrated/images/Cisco-Switching/versions/1.0.0",
+      "metadata": {
+        "description": "Resource ID of the SPECIALIZED Compute Gallery image version for the Cisco-Switching lab VM (Hyper-V host + nested CML, pre-configured)."
+      }
+    }
+  },
+  "variables": {
+    "virtualMachineSize": "Standard_D8s_v4",
+    "virtualNetworkName": "[concat('labvNet-', parameters('DeploymentID'))]",
+    "mgmtSubnetName": "mgmt",
+    "mgmtSubnetPrefix": "10.0.0.0/24",
+    "addressPrefix": "10.0.0.0/16",
+    "vmName": "[concat('labvm-', parameters('DeploymentID'))]",
+    "networkInterfaceName": "[concat('labvm-', parameters('DeploymentID'), '-nic')]",
+    "networkSecurityGroupName": "[concat('labvm-', parameters('DeploymentID'), '-nsg')]",
+    "publicIpAddressName": "[concat('labvm-', parameters('DeploymentID'), '-pip')]",
+    "publicIpAddressDNSName": "[concat('labvm', parameters('DeploymentID'), uniqueString(resourceGroup().id))]",
+    "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('mgmtSubnetName'))]",
+    "location": "[resourceGroup().location]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2017-04-01",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [ "[variables('addressPrefix')]" ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('mgmtSubnetName')]",
+            "properties": {
+              "addressPrefix": "[variables('mgmtSubnetPrefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2017-08-01",
+      "name": "[variables('publicIpAddressName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIpAllocationMethod": "Static",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('publicIpAddressDNSName')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2017-06-01",
+      "name": "[variables('networkSecurityGroupName')]",
+      "comments": "Allows RDP (3389) inbound so the student can connect to the Windows host VM and reach the CML web UI (192.168.100.10) from inside that session.",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "default-allow-rdp",
+            "properties": {
+              "priority": 110,
+              "protocol": "TCP",
+              "access": "Allow",
+              "direction": "Inbound",
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "3389"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2016-09-01",
+      "name": "[variables('networkInterfaceName')]",
+      "comments": "Windows host VM NIC - runs Hyper-V + the nested CML VM, reachable over RDP to drive the lab.",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/publicIpAddresses/', variables('publicIpAddressName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIpAddress": {
+                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2019-07-01",
+      "name": "[variables('vmName')]",
+      "comments": "Windows Server host VM (labvm-<DeploymentID>) built from a SPECIALIZED Compute Gallery image with Hyper-V, the NAT virtual switch, and the nested CML VM (installed, licensed, images imported, VLAN-LAB topology built) pre-baked in. A specialized image carries its own machine identity/local accounts, so this VM has NO osProfile - RDP uses the credentials baked into the image. The candidate RDPs in, opens the CML web UI, and performs the VLAN task on the switch node.",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('virtualMachineSize')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "id": "[parameters('cmlImageId')]"
+          },
+          "osDisk": {
+            "createOption": "fromImage",
+            "name": "[concat(variables('vmName'), '-osdisk')]",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            }
+          },
+          "dataDisks": []
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "Deployment ID": {
+      "type": "string",
+      "value": "[parameters('DeploymentID')]"
+    },
+    "LABVM Admin Username": {
+      "type": "string",
+      "value": "[parameters('adminUsername')]"
+    },
+    "LABVM Admin Password": {
+      "type": "string",
+      "value": "[parameters('adminPassword')]"
+    },
+    "LABVM DNS Name": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))).dnsSettings.fqdn]"
+    },
+    "LABVM RDP Command": {
+      "type": "string",
+      "value": "[concat('mstsc /v:', reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))).dnsSettings.fqdn)]"
+    }
+  }
+}
