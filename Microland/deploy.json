@@ -26,7 +26,7 @@
     }
   },
   "variables": {
-    "virtualMachineSize": "Standard_D8s_v4",
+    "virtualMachineSize": "Standard_D8s_v5",
     "virtualNetworkName": "[concat('labvNet-', parameters('DeploymentID'))]",
     "mgmtSubnetName": "mgmt",
     "mgmtSubnetPrefix": "10.0.0.0/24",
