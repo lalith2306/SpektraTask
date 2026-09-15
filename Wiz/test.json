@@ -1,0 +1,112 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Simple S3 versioning rollback test",
+  "Parameters": {
+    "CloudLabsDeploymentID": {
+      "Type": "String",
+      "Description": "CloudLabs Deployment ID"
+    },
+    "CheckAcknowledgement": {
+      "Type": "String",
+      "Default": "TRUE",
+      "Description": "Check acknowledgement"
+    }
+  },
+  "Resources": {
+    "TestBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        },
+        "BucketName": {
+          "Fn::Sub": "test-bucket-${AWS::AccountId}-${CloudLabsDeploymentID}"
+        }
+      }
+    },
+    "LambdaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "S3Access",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:PutObject",
+                    "s3:DeleteObject",
+                    "s3:GetObject"
+                  ],
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:s3:::test-bucket-${AWS::AccountId}-${CloudLabsDeploymentID}/*"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "LambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Runtime": "python99",
+        "Handler": "index.lambda_handler",
+        "Role": {
+          "Fn::GetAtt": ["LambdaRole", "Arn"]
+        },
+        "Timeout": 60,
+        "Code": {
+          "ZipFile": "import boto3\nimport cfnresponse\n\ns3 = boto3.client('s3')\n\ndef lambda_handler(event, context):\n    bucket = event['ResourceProperties']['BucketName']\n    key = 'test-file.txt'\n    \n    if event['RequestType'] == 'Create':\n        # Upload file to S3\n        s3.put_object(\n            Bucket=bucket,\n            Key=key,\n            Body='Test content',\n            ServerSideEncryption='AES256'\n        )\n        cfnresponse.send(event, context, cfnresponse.SUCCESS, {})\n    \n    elif event['RequestType'] == 'Delete':\n        # Delete ONLY current version (creates delete marker)\n        s3.delete_object(Bucket=bucket, Key=key)\n        # OLD VERSION STILL EXISTS!\n        cfnresponse.send(event, context, cfnresponse.SUCCESS, {})"
+        }
+      }
+    },
+    "CustomResource": {
+      "Type": "Custom::UploadResource",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": ["LambdaFunction", "Arn"]
+        },
+        "BucketName": {
+          "Ref": "TestBucket"
+        }
+      }
+    },
+    "FailingUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "UserName": "MyHardcodedUser"
+      },
+      "DependsOn": "CustomResource"
+    }
+  },
+  "Outputs": {
+    "BucketName": {
+      "Description": "S3 Bucket Name",
+      "Value": {
+        "Ref": "TestBucket"
+      }
+    },
+    "UserName": {
+      "Description": "IAM User Name",
+      "Value": {
+        "Ref": "FailingUser"
+      }
+    }
+  }
+}
