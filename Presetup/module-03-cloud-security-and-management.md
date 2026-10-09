@@ -8,15 +8,15 @@ This module focuses on access control, cost management, and monitoring. Choose t
 
 Please answer all three questions before moving on:
 
-<question source="Inline-Questions/question-07.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-07.md" />
 
 <br>
 
-<question source="Inline-Questions/question-08.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-08.md" />
 
 <br>
 
-<question source="Inline-Questions/question-09.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-09.md" />
 
 ## Module Summary
 
