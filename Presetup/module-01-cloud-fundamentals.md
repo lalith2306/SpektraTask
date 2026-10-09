@@ -2,7 +2,7 @@
 
 ## Module Overview
 
-This module introduces cloud computing, common cloud providers, and cloud service models. Choose the single best answer for each question.
+This module introduces cloud computing, common cloud providers, and cloud service models. Choose the single best answer for each question
 
 ## Question & Answers
 
