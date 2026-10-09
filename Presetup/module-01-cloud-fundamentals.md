@@ -8,11 +8,11 @@ This module introduces cloud computing, common cloud providers, and cloud servic
 
 Please answer all three questions before moving on:
 
-<question source="[Inline-Questions/question-01.md](https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-01.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-01.md" />
 
 <br>
 
-<question source="[Inline-Questions/](https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-02.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-02.md" />
 
 <br>
 
