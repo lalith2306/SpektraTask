@@ -8,15 +8,15 @@ This module covers software delivery models, virtual machines, and cloud storage
 
 Please answer all three questions before moving on:
 
-<question source="Inline-Questions/question-04.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-04.md" />
 
 <br>
 
-<question source="Inline-Questions/question-05.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-05.md" />
 
 <br>
 
-<question source="Inline-Questions/question-06.md" />
+<question source="https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/question-06.md" />
 
 ## Module Summary
 
