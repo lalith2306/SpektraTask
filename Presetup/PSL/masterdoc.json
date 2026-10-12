@@ -5,17 +5,14 @@
     "Files": [
       {
         "RawFilePath": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/module-01-cloud-fundamentals.md",
-        "PageDuration": 0,
         "Order": 1
       },
       {
         "RawFilePath": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/module-02-cloud-services-and-infrastructure.md",
-        "PageDuration": 0,
         "Order": 2
       }
       {
         "RawFilePath": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/module-03-cloud-security-and-management.md",
-        "PageDuration": 0,
         "Order": 3
       },
     ]
