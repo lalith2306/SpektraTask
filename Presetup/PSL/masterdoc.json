@@ -1,1 +1,18 @@
-
+[
+  {
+    "Name": "Download Certificates Test",
+    "Language": "English",
+    "Files": [
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/PSL/1.json",
+        "PageDuration": 0,
+        "Order": 1
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/lalith2306/SpektraTask/refs/heads/main/Presetup/PSL/2.json",
+        "PageDuration": 0,
+        "Order": 2
+      }
+    ]
+  }
+]
