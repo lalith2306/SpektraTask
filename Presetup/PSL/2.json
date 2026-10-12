@@ -1,0 +1,67 @@
+# Cloud Computing — Page 2
+
+## Instructions
+Choose one answer for each question. Each question has three options and one correct answer.
+
+## Cloud Services, Security, and Management
+
+## Question 4: Which cloud service model provides ready-to-use software over the internet?
+
+- A. SaaS (Software as a Service)
+- B. IaaS (Infrastructure as a Service)
+- C. On-premises hardware
+
+**Correct answer:** A
+
+---
+
+## Question 5: What is the main purpose of a virtual machine (VM)?
+
+- A. To create a software-based computer that runs an operating system and applications
+- B. To physically repair a server
+- C. To replace every network connection
+
+**Correct answer:** A
+
+---
+
+## Question 6: Which cloud service is primarily used to store files such as images, videos, and backups as objects?
+
+- A. Object storage
+- B. Load balancing
+- C. DNS
+
+**Correct answer:** A
+
+---
+
+## Question 7: What does the principle of least privilege mean?
+
+- A. Give every user administrator access
+- B. Give users only the permissions they need to perform their tasks
+- C. Disable all user accounts
+
+**Correct answer:** B
+
+---
+
+## Question 8: Which action can help control cloud costs?
+
+- A. Leave every unused virtual machine running
+- B. Monitor resource usage and remove resources that are no longer needed
+- C. Create duplicate resources without checking usage
+
+**Correct answer:** B
+
+---
+
+## Question 9: Why are monitoring and logs useful in a cloud environment?
+
+- A. They help identify performance issues, errors, and unusual activity
+- B. They automatically eliminate every security risk
+- C. They make backups unnecessary
+
+**Correct answer:** A
+
+---
+
