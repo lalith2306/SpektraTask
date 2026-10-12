@@ -1,4 +1,4 @@
-# Module 1: Cloud Security and Management
+# Module 3: Cloud Security and Management
 
 ## Module Overview
 
