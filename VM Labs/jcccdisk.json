@@ -209,7 +209,7 @@
             }
         },
         "dataDiskSource": {
-            "defaultValue": "fromImage",
+            "defaultValue": "empty",
             "allowedValues": [
                 "empty",
                 "fromImage"
@@ -253,7 +253,7 @@
             }
         },
         "dataDiskLun": {
-            "defaultValue": "0",
+            "defaultValue": "10",
             "type": "string",
             "metadata": {
                 "description": "_JCCC-ADD. LUN for the data disk. Must match the LUN used at capture time when dataDiskSource is 'fromImage'."
